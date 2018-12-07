@@ -1,0 +1,13 @@
+Package: lagnetw
+Title: The package builds a network
+Version: 0.0.0.9000
+Authors@R: person("Peter", "Verboon", email = "Peter.Verboon@ou.nl", role = c("aut", "cre"))
+Description: The package builds a network based on lagged variables. The variables are from ESM data
+Depends: R (>= 3.5.1)
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Imports: lme4,
+    qgraph,
+    arm
