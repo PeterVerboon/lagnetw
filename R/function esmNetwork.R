@@ -19,7 +19,8 @@
 #' res <- esmNetwork(dat = DataNews, subjnr="subjnr", daynr= "daynr",
 #'        beepnr = "beepnr", vars = vars, labs = labs, lagn = 1)
 #'        
-esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,lagn=1, labs=NULL, titlePlot="Figure"){
+esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,
+                       lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
   
    if (is.null(daynr)) {dat$daynr <- 1; daynr <- "daynr"}
   
@@ -45,7 +46,8 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,lagn=1
  
   ### Construct lagged variables
    
-  dat2 <- LagESM(dat1, subjnr=subjnr,daynr=daynr,beepnr=beepnr, lagn=lagn, varnames=vars)
+  dat2 <- LagESM(dat1, subjnr=subjnr,daynr=daynr,beepnr=beepnr, lagn=lagn, 
+                  varnames=vars)
   
   model1=list()
   
@@ -76,12 +78,12 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,lagn=1
              to=rep(1:nvars,nvars),
              weigth=unlist(coef1[,(2+npred-nvars):(npred+1)]))
   pvals <- 2*(1-pnorm(abs(unlist(coef1[,(2+npred-nvars):(npred+1)]/se.coef1[,(2+npred-nvars):(npred+1)]) )))
-  edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < 0.01, 255, 0))
+  edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < plimit, 255, 0))
   
   G <- qgraph::qgraph(E,fade=FALSE,
                 layout="spring",
                 labels=labs, 
-                lty=ifelse(E[,3]>0.1,1,5),
+                lty=ifelse(E[,3]>solid,1,5),
                 edge.labels=F,
                 edge.color=edge.color, 
                 title=titlePlot)
