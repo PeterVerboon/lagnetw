@@ -15,8 +15,8 @@
 #' @export
 #'
 #' @examples
-#' data("newsData")
-#' res <- esmNetwork(dat = newsData, subjnr="subjnr", daynr= "daynr",
+#' data("DataNews")
+#' res <- esmNetwork(dat = DataNews, subjnr="subjnr", daynr= "daynr",
 #'        beepnr = "beepnr", vars = vars, labs = labs, lagn = 1)
 #'        
 esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,lagn=1, labs=NULL, titlePlot="Figure"){
@@ -60,16 +60,16 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,lagn=1
   
   ###  inferring the coefficients or connection strengths for the network from the fitted model1
   
-  coef1=data.frame(matrix(unlist(lapply(model1,fixef),use.names=FALSE),
+  coef1=data.frame(matrix(unlist(lapply(model1,lme4::fixef),use.names=FALSE),
                           byrow=TRUE, 
                           ncol=(npred+1))) 
-  colnames(coef1)=names(fixef(model1[[1]]))
+  colnames(coef1)=names(lme4::fixef(model1[[1]]))
   rownames(coef1)=vars
   
   se.coef1=data.frame(matrix(unlist(lapply(model1,arm::se.fixef),use.names=FALSE),
                              byrow=TRUE,
                              ncol=(npred+1))) 
-  colnames(se.coef1)=names(fixef(model1[[1]]))
+  colnames(se.coef1)=names(lme4::fixef(model1[[1]]))
   rownames(se.coef1)=vars
 
   E <- cbind(from=rep(1:nvars,each=nvars),

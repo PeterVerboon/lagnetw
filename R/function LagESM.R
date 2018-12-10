@@ -54,7 +54,7 @@ L <- length(varnames)
 
 for (i in 1:L) {   
   newname <- paste(varnames[i],"L",lagn, sep="")
-  b[,newname] <- lag(b[,c(varnames[i])], n=lagn)
+  b[,newname] <- data.table::shift(b[,c(varnames[i])], n=lagn)
 }
 
 
