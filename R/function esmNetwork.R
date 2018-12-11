@@ -9,6 +9,8 @@
 #' @param covs covariates in the analyses, which are not plotted in the network
 #' @param lagn number of lags used in the network
 #' @param labs labels used in the network plot
+#' @param solid effect size above which lines are shown as solid (default = .10)
+#' @param plimit p-value under which lines are shown (default = .05)
 #' @param titlePlot title for the plot
 #'
 #' @return a qgraph object (network) that can be plotted
