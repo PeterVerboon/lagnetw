@@ -5,7 +5,8 @@
 \title{Function to compute network of ESM variables using lags in multilevel analysis}
 \usage{
 esmNetwork(dat, subjnr, daynr = NULL, beepnr, vars, covs = NULL,
-  lagn = 1, labs = NULL, titlePlot = "Figure")
+  lagn = 1, labs = NULL, solid = 0.1, plimit = 0.05,
+  titlePlot = "Figure")
 }
 \arguments{
 \item{dat}{data frame}
@@ -24,6 +25,10 @@ esmNetwork(dat, subjnr, daynr = NULL, beepnr, vars, covs = NULL,
 
 \item{labs}{labels used in the network plot}
 
+\item{solid}{effect size above which lines are shown as solid (default = .10)}
+
+\item{plimit}{p-value under which lines are shown (default = .05)}
+
 \item{titlePlot}{title for the plot}
 }
 \value{
@@ -33,8 +38,8 @@ a qgraph object (network) that can be plotted
 Function to compute network of ESM variables using lags in multilevel analysis
 }
 \examples{
-data("newsData")
-res <- esmNetwork(dat = newsData, subjnr="subjnr", daynr= "daynr",
+data("DataNews")
+res <- esmNetwork(dat = DataNews, subjnr="subjnr", daynr= "daynr",
        beepnr = "beepnr", vars = vars, labs = labs, lagn = 1)
        
 }
