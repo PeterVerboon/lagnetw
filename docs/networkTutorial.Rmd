@@ -1,0 +1,88 @@
+---
+title             : "Tutorial of network analyses of ESM data: the lagnetw package"
+shorttitle        : "Tutorial lagnetw"
+
+author: 
+  - name          : "Peter Verboon"
+    affiliation   : "1"
+    corresponding : yes    # Define only one corresponding author
+    address       : "P.O.Box 2960,  6401 DL  Heerlen"
+    email         : "Peter.Verboon@ou.nl"
+  - name          : "Annelie Beijer "
+    affiliation   : "1 "
+
+affiliation:
+  - id            : "1"
+    institution   : "Open University"
+
+authornote: |
+  
+abstract: |
+  Network analyses have many applications. In this tutorial we focus on networks build with data obtained with the experience sampling method (ESM). The networks are directed, the relations between the variables in the network are directed because lagged predictors are used. An arrow in the network represents an effect from a variable measured at t-1 on another variable measured at t or on itself measured at t.     
+  In this tutorial we will show how the package "lagnetw" can be used to do a network analysis.
+  
+keywords          : "network ESM lags Multilevel"
+#wordcount         : "X"
+
+bibliography      : ["Refs_network.bib"]
+
+floatsintext      : yes
+figurelist        : no
+tablelist         : no
+footnotelist      : no
+linenumbers       : no
+mask              : no
+draft             : no
+
+documentclass     : "apa6"
+classoption       : "man"
+output            : papaja::apa6_pdf
+---
+
+```{r setup, include = FALSE}
+library("papaja")
+```
+
+```{r analysis-preferences}
+# Seed for random number generation
+set.seed(42)
+knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
+```
+
+
+## Introduction
+
+For this tutorial a network is defined as a visual representation of a set of variables together with the relations between these variables. The aim of such a network is to better understand the underlying process, which has realized the measurements on the variables. etc. etc.
+
+The ` lagnetw ` is in the R package ` lagnetw `. This package can be installed from Github and then loaded using the `library()` function: 
+
+` devtools::install_github("PeterVerboon/lagnetw") `
+
+
+```{r chunk1, eval = TRUE, echo = TRUE, include = TRUE, warning = FALSE}
+library(lagnetw)
+```
+
+## Example
+
+
+
+## Indices of centrality
+To better unbderstand the role of the variables in the network several statistics for a network have been developped, which are called indices of centrality. 
+
+## Note
+We used `r cite_r("Refs_network")` for all our analyses.
+
+\newpage
+
+# References
+```{r create_references}
+r_refs(file = "Refs_network")
+```
+
+\begingroup
+\setlength{\parindent}{-0.5in}
+\setlength{\leftskip}{0.5in}
+
+<div id = "refs"></div>
+\endgroup
