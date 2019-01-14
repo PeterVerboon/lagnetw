@@ -53,6 +53,7 @@ knitr::opts_chunk$set(cache.extra = knitr::rand_seed)
 ## Introduction
 
 For this tutorial a network is defined as a visual representation of a set of variables together with the relations between these variables. The aim of such a network is to better understand the underlying process, which has realized the measurements on the variables. etc. etc.
+Examples of the network approach in personality research are in [@Costantini2015]. Other papers discuss the psychological networks and their accuracy [@Epskamp2018] and controversial issues related to networks for psychopathology [@Bringmann2018a].
 
 The ` lagnetw ` is in the R package ` lagnetw `. This package can be installed from Github and then loaded using the `library()` function: 
 
@@ -62,6 +63,9 @@ The ` lagnetw ` is in the R package ` lagnetw `. This package can be installed f
 ```{r chunk1, eval = TRUE, echo = TRUE, include = TRUE, warning = FALSE}
 library(lagnetw)
 ```
+
+## ESM 
+
 
 ## Example
 

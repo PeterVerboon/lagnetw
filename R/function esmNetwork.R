@@ -3,8 +3,8 @@
 #'
 #' @param dat data frame 
 #' @param subjnr variable, indicating subjects
-#' @param daynr variable, indicating days
-#' @param beepnr variable, indicating beeps
+#' @param level1 variable, indicating level 1 variable, e.g. beeps
+#' @param level2 variable, indicating level 2 variable, e.g. days
 #' @param vars vector with the names of the variables for which the network is computed
 #' @param covs covariates in the analyses, which are not plotted in the network
 #' @param lagn number of lags used in the network
@@ -18,19 +18,19 @@
 #'
 #' @examples
 #' data("DataNews")
-#' res <- esmNetwork(dat = DataNews, subjnr="subjnr", daynr= "daynr",
-#'        beepnr = "beepnr", vars = vars, labs = labs, lagn = 1)
+#' res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
+#'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
-esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,
+esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, randAll = FALSE,
                        lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
   
-   if (is.null(daynr)) {dat$daynr <- 1; daynr <- "daynr"}
+   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
-   dat1 <- dat[,c(subjnr,daynr,beepnr, covs,vars)]
+   dat1 <- dat[,c(subjnr,level2,level1, covs,vars)]
   
    if (is.null(labs)) { labs <- vars}
 
-    # Vector of predictor names (lagged variables)
+  # Vector of predictor names (lagged variables)
    
    varsp <- paste0(vars[1],"L",lagn)
    for (i in 2:length(vars)) {
@@ -40,17 +40,27 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,
    covs2 <- ifelse(is.null(covs), "", paste0(covs," + "))
    
    # all predictors, only random intercept
-   pred1 <- paste0("(",covs2, varsp," + (1|",subjnr,"))")
+   if (randAll) {
+     pred1 <- paste0("(",covs2, varsp," + (",varsp, "|",subjnr,"))")
+   } else {
+     pred1 <- paste0("(",covs2, varsp," + (1|",subjnr,"))") 
+   }
    
-   nvars = length(vars)                 # number of variables involved in the network analyses
+   
+   nvars = length(vars)                # number of variables involved in the network analyses
    npred = length(covs) + nvars        # number of predictors involved in the analyses
    
  
   ### Construct lagged variables
    
-  dat2 <- LagESM(dat1, subjnr=subjnr,daynr=daynr,beepnr=beepnr, lagn=lagn, 
-                  varnames=vars)
-  
+  dat2 <- LagESM(dat1, 
+                 subjnr=subjnr,
+                 level2=level2,
+                 level1=level1, 
+                 lagn=lagn, 
+                 varnames=vars)
+ 
+   
   model1=list()
   
   ### run MLA for all variables in network
@@ -82,7 +92,7 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,
   pvals <- 2*(1-pnorm(abs(unlist(coef1[,(2+npred-nvars):(npred+1)]/se.coef1[,(2+npred-nvars):(npred+1)]) )))
   edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < plimit, 255, 0))
   
-  G <- qgraph::qgraph(E,fade=FALSE,
+  G1 <- qgraph::qgraph(E,fade=FALSE,
                 layout="spring",
                 labels=labs, 
                 lty=ifelse(E[,3]>solid,1,5),
@@ -90,7 +100,40 @@ esmNetwork <- function(dat, subjnr, daynr = NULL, beepnr, vars, covs=NULL,
                 edge.color=edge.color, 
                 title=titlePlot)
   
-  return(G)
+ 
+   ## centrality measures
+  
+  C <- qgraph::centrality(E, alpha = 1, posfun = abs, all.shortest.paths = FALSE)
+  C <- data.frame(cbind(C$Betweenness, C$Closeness, C$OutDegree, C$InDegree))
+  names(C) <- c("Betweenness", "Closeness"," outDegree", " inDegree")
+  row.names(C) <- vars
+  
+  ###  with "VV" the individual differences are taken from the fitted model1, each link now indicates the amount of individual variability
+  ###  the random slope effects are selected in the VarCorr output
+  ###  Assumed that there are 1 (intercept) + nvars random effecten
+  
+  if (randAll) { 
+  
+     VV <- sqrt(t(matrix(unlist(lapply(model1,function(x){VV=diag(lme4::VarCorr(x)[[1]][2:(nvars+1),2:(nvars+1)])})),nvars,nvars)))
+  
+     E2 <- cbind(from=rep(1:nvars,each=nvars),to=rep(1:nvars,nvars),weigth=as.vector(VV))
+     edge.color <- addTrans("blue", ifelse(E[,3]>.095, 255, 20))
+     G2 <- qgraph::qgraph(E2,fade=FALSE,
+                          layout="circular",
+                          labels=labs,
+                          lty=ifelse(E[,3]>0,1,5),
+                          edge.labels=F,
+                          edge.color=edge.color)
+     
+     result <- list(plotData = E, network = G1, centralityMeasures = C, inddif = G2)
+  
+  } else {
+         result <- list(plotData = E, network = G1, centralityMeasures = C)
+    }
+  
+  
+
+  return(result)
   
   
 }  # end function
