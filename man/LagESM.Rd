@@ -4,17 +4,17 @@
 \alias{LagESM}
 \title{Function to compute lagged n variables in ESM data and add it to data}
 \usage{
-LagESM(dat, subjnr = "subjnr", daynr = "daynr", beepnr = "beepnr",
-  lagn = 1, varnames)
+LagESM(dat, subjnr = "subjnr", level2 = NULL, level1, lagn = 1,
+  varnames)
 }
 \arguments{
 \item{dat}{data frame}
 
 \item{subjnr}{variable, indicating subjects}
 
-\item{daynr}{variable, indicating days}
+\item{level2}{variable, indicating level 2 variable, e.g. days}
 
-\item{beepnr}{variable, indicating beeps}
+\item{level1}{variable, indicating level 1 variable, e.g. beeps}
 
 \item{lagn}{number of lags}
 
@@ -28,6 +28,6 @@ Function to compute lagged n variables in ESM data and add it to data
 }
 \examples{
 data("newsData")
-res <- lagESM(dat = newsData, subjnr="subjnr", daynr= "daynr",
-       beepnr = "beepnr", lagn = 1, varnames = vars)
+res <- lagESM(dat = newsData, subjnr="subjnr", level2= "daynr",
+       level1 = "beepnr", lagn = 1, varnames = vars)
 }

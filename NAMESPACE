@@ -3,3 +3,4 @@
 export(LagESM)
 export(addTrans)
 export(esmNetwork)
+export(plotSubject)

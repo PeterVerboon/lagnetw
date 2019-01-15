@@ -2,9 +2,9 @@
 #' Function to compute network of ESM variables using lags in multilevel analysis
 #'
 #' @param dat data frame 
-#' @param subjnr variable, indicating subjects
-#' @param level1 variable, indicating level 1 variable, e.g. beeps
-#' @param level2 variable, indicating level 2 variable, e.g. days
+#' @param subjnr variable name, indicating the subjects
+#' @param level1 variable name, indicating level 1 variable, e.g. beeps
+#' @param level2 variable name, indicating level 2 variable, e.g. days
 #' @param vars vector with the names of the variables for which the network is computed
 #' @param covs covariates in the analyses, which are not plotted in the network
 #' @param lagn number of lags used in the network
@@ -21,10 +21,24 @@
 #' res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
 #'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
-esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, randAll = FALSE,
+esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, randomAll = FALSE, randomVars = NULL, 
                        lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
   
-   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
+  result <- list(input = as.list(environment()),
+                 intermediate = list(),
+                 output = list());
+  
+  result$intermediate$dataName <- as.character(deparse(substitute(dat)));
+  
+  nvars <- length(vars)                # number of variables involved in the network analyses
+  npred <- length(covs) + nvars        # number of predictors involved in the analyses
+  
+  result$intermediate$numberOfVars <- nvars
+  result$intermediate$numberOfPreds <- npred
+  
+  if (nvars < 3) { stop("Number of variables in the network should be more than 2") }
+  
+  if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
    dat1 <- dat[,c(subjnr,level2,level1, covs,vars)]
   
@@ -37,21 +51,30 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, ran
      varsp <- paste0(varsp, " + ", vars[i],"L",lagn)
    }
    
+  # Vector of predictor names with random effect (lagged variables)
+   
+   if (!is.null(randomVars)) { 
+     vrandom <- 1 
+       for (i in (seq_along(randomVars))) {
+           vrandom <- paste0(vrandom, "+", randomVars[i],"L",lagn)
+       }
+     }
+
    covs2 <- ifelse(is.null(covs), "", paste0(covs," + "))
    
-   # all predictors, only random intercept
-   if (randAll) {
-     pred1 <- paste0("(",covs2, varsp," + (",varsp, "|",subjnr,"))")
+
+   ## check random effects and build formula
+   
+   if (randomAll) {
+     vrandom <- varsp
+     pred1 <- paste0("(",covs2, varsp," + (", varsp, "|",subjnr,"))")
    } else {
-     pred1 <- paste0("(",covs2, varsp," + (1|",subjnr,"))") 
+     if (!exists("vrandom")) vrandom <- 1
+     pred1 <- paste0("(",covs2, varsp," + (", vrandom, "|",subjnr,"))") 
    }
    
-   
-   nvars = length(vars)                # number of variables involved in the network analyses
-   npred = length(covs) + nvars        # number of predictors involved in the analyses
-   
  
-  ### Construct lagged variables
+  ## Construct lagged variables
    
   dat2 <- LagESM(dat1, 
                  subjnr=subjnr,
@@ -59,11 +82,11 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, ran
                  level1=level1, 
                  lagn=lagn, 
                  varnames=vars)
- 
-   
-  model1=list()
+
   
   ### run MLA for all variables in network
+  
+  model1 <- list()
   
   for (j in 1:nvars) {
     ff=as.formula(paste(vars[j],"~", pred1, sep="")); 
@@ -72,7 +95,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, ran
   }
   
   
-  ###  inferring the coefficients or connection strengths for the network from the fitted model1
+  ##  inferring the coefficients for the network from the fitted model1
   
   coef1=data.frame(matrix(unlist(lapply(model1,lme4::fixef),use.names=FALSE),
                           byrow=TRUE, 
@@ -95,11 +118,10 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, ran
   G1 <- qgraph::qgraph(E,fade=FALSE,
                 layout="spring",
                 labels=labs, 
-                lty=ifelse(E[,3]>solid,1,5),
+                lty=ifelse(E[,3] > solid, 1, 5),
                 edge.labels=F,
                 edge.color=edge.color, 
                 title=titlePlot)
-  
  
    ## centrality measures
   
@@ -108,35 +130,39 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs=NULL, ran
   names(C) <- c("Betweenness", "Closeness"," outDegree", " inDegree")
   row.names(C) <- vars
   
-  ###  with "VV" the individual differences are taken from the fitted model1, each link now indicates the amount of individual variability
-  ###  the random slope effects are selected in the VarCorr output
-  ###  Assumed that there are 1 (intercept) + nvars random effecten
+  ##  In "VV" the individual differences are taken from the fitted model1, each link now indicates 
+  ##  the amount of variability across subjects
+  ##  Assumed that there are 1 (intercept) + nvars random effecten
   
-  if (randAll) { 
+  if (randomAll) { 
   
      VV <- sqrt(t(matrix(unlist(lapply(model1,function(x){VV=diag(lme4::VarCorr(x)[[1]][2:(nvars+1),2:(nvars+1)])})),nvars,nvars)))
   
      E2 <- cbind(from=rep(1:nvars,each=nvars),to=rep(1:nvars,nvars),weigth=as.vector(VV))
+     
      edge.color <- addTrans("blue", ifelse(E[,3]>.095, 255, 20))
      G2 <- qgraph::qgraph(E2,fade=FALSE,
                           layout="circular",
                           labels=labs,
-                          lty=ifelse(E[,3]>0,1,5),
+                          lty=ifelse(E[,3] > solid, 1, 5),
                           edge.labels=F,
-                          edge.color=edge.color)
+                          edge.color=edge.color,
+                          title = "Path variability")
      
-     result <- list(plotData = E, network = G1, centralityMeasures = C, inddif = G2)
+     (result$output <- list(plotData = E, network = G1, centralityMeasures = C, pathVariability = G2, model = model1))
   
   } else {
-         result <- list(plotData = E, network = G1, centralityMeasures = C)
+        (result$output <- list(plotData = E, network = G1, centralityMeasures = C,  model = model1))
     }
   
-  
-
+ 
+  class(result) <- "esmNetwork"
   return(result)
   
   
+  
 }  # end function
+
 
 
 

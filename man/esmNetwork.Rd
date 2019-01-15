@@ -4,18 +4,18 @@
 \alias{esmNetwork}
 \title{Function to compute network of ESM variables using lags in multilevel analysis}
 \usage{
-esmNetwork(dat, subjnr, daynr = NULL, beepnr, vars, covs = NULL,
-  lagn = 1, labs = NULL, solid = 0.1, plimit = 0.05,
-  titlePlot = "Figure")
+esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
+  randomAll = FALSE, randomVars = NULL, lagn = 1, labs = NULL,
+  solid = 0.1, plimit = 0.05, titlePlot = "Figure")
 }
 \arguments{
 \item{dat}{data frame}
 
-\item{subjnr}{variable, indicating subjects}
+\item{subjnr}{variable name, indicating the subjects}
 
-\item{daynr}{variable, indicating days}
+\item{level1}{variable name, indicating level 1 variable, e.g. beeps}
 
-\item{beepnr}{variable, indicating beeps}
+\item{level2}{variable name, indicating level 2 variable, e.g. days}
 
 \item{vars}{vector with the names of the variables for which the network is computed}
 
@@ -39,7 +39,7 @@ Function to compute network of ESM variables using lags in multilevel analysis
 }
 \examples{
 data("DataNews")
-res <- esmNetwork(dat = DataNews, subjnr="subjnr", daynr= "daynr",
-       beepnr = "beepnr", vars = vars, labs = labs, lagn = 1)
+res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
+                  level2= "daynr", vars = vars, labs = labs, lagn = 1)
        
 }
