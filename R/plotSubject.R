@@ -26,6 +26,7 @@ plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid
   model <- res$output$model
   
   if (!subjectID %in% dat[,subjnr]) stop("subject identification is not in the data")
+  if(is.null(randomVars) & !randomAll) warning("Only fixed (slope) effects in model: individual plots are superfluous")
   
   ncov <- npred - nvars
   nrand <- length(randomVars)
