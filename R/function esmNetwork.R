@@ -22,7 +22,7 @@
 #'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
 esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, randomAll = FALSE, randomVars = NULL, 
-                       groups = NULL, lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
+                       groups = NULL, lagn=1, layout = "spring", labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
   
   result <- list(input = as.list(environment()),
                  intermediate = list(),
@@ -60,7 +60,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, r
        }
      }
 
-   covs2 <- ifelse(is.null(covs), "", paste0(covs," + "))
+   covs2 <- ifelse(is.null(covs), "", paste0(paste0(covs,collapse = " + "), " + "))
    
 
    ## check random effects and build formula
@@ -120,7 +120,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, r
   
   G1 <- qgraph::qgraph(E,fade=FALSE,
                        groups = groups,
-                       layout="spring",
+                       layout=layout,
                        labels=labs, 
                        lty=ifelse(E[,3] > solid, 1, 5),
                        edge.labels=F,
