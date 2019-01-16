@@ -161,7 +161,7 @@ For this tutorial a network is defined as a visual representation of a
 set of variables together with the relations between these variables.
 The aim of such a network is to better understand the underlying
 process, which has realized the measurements on the variables. etc. etc.
-Examples of the network appraocj in personality research are in
+Examples of the network approach in personality research are in
 (Costantini et al., 2015). Other papers discuss the psychological
 networks and their accuracy (Epskamp, Borsboom, \& Fried, 2018) and
 controversial issues related to networks for psychopathology (Bringmann
@@ -183,6 +183,75 @@ can be installed from Github and then loaded using the
 
 \subsection{Example}\label{example}
 
+The data for this example (DataNews) are obtained in a ESM study about
+the effect of daily news perception on mood fluctuations. During 10
+days, and 7 times per day, participants had to indicate whether they had
+perceived news, and if they had, to rate the valence of the news using 5
+variables. After that they had to rate their mood using items from the
+PANAS. After selecting a relevant subset of the data for this example,
+we construct an object \texttt{vars}, which cobtains the variable names
+that will be used to build the network. To label the vars in the network
+plot with convenient symbols, we can define labels, which we add in the
+object \texttt{labs}. Furthermore, groups are defined for the variables
+in the object \texttt{newsGroup}. Variables belonging to each other are
+placed in the same group. Here we have variables that refer to the news,
+which indicate the subjective valence of the news (the Valence group),
+and we have mood items, put in the group called \enquote{Affect}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{data}\NormalTok{(}\StringTok{"DataNews"}\NormalTok{)}
+ \CommentTok{# Select the records where news was perceived}
+\NormalTok{dat <-}\StringTok{ }\KeywordTok{subset}\NormalTok{(DataNews, News_YesNO }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{)      }
+\NormalTok{vars <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Cheerful"}\NormalTok{,}\StringTok{"Relaxed"}\NormalTok{,}\StringTok{"Down"}\NormalTok{,}\StringTok{"Irritated"}\NormalTok{,}\StringTok{"Insecure"}\NormalTok{,}\StringTok{"Anxious"}\NormalTok{,}
+          \StringTok{"Dramatic"}\NormalTok{,}\StringTok{"Fearful"}\NormalTok{,}\StringTok{"Hopeful"}\NormalTok{,}\StringTok{"Inspiring"}\NormalTok{)}
+\NormalTok{labs <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"CH"}\NormalTok{,}\StringTok{"REL"}\NormalTok{,}\StringTok{"DOW"}\NormalTok{, }\StringTok{"IRR"}\NormalTok{,}\StringTok{"INS"}\NormalTok{,}\StringTok{"ANX"}\NormalTok{,}\StringTok{"DRA"}\NormalTok{,}\StringTok{"FF"}\NormalTok{,}\StringTok{"HO"}\NormalTok{,}\StringTok{"SPI"}\NormalTok{)}
+\NormalTok{newsGroup <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{Affect =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{), }\DataTypeTok{Valence =} \KeywordTok{c}\NormalTok{(}\DecValTok{7}\OperatorTok{:}\DecValTok{10}\NormalTok{))}
+ \CommentTok{# select the relevant variables only}
+\NormalTok{dat1 <-}\StringTok{ }\NormalTok{dat[,}\KeywordTok{c}\NormalTok{(vars,}\KeywordTok{c}\NormalTok{(}\StringTok{"Participant"}\NormalTok{,}\StringTok{"daynr"}\NormalTok{,}\StringTok{"beepnr"}\NormalTok{,}\StringTok{"Gender2"}\NormalTok{,}\StringTok{"Age"}\NormalTok{))]    }
+
+\NormalTok{res <-}\StringTok{ }\KeywordTok{esmNetwork}\NormalTok{(}\DataTypeTok{dat=}\NormalTok{dat1, }
+                  \DataTypeTok{subjnr=}\StringTok{"Participant"}\NormalTok{, }
+                  \DataTypeTok{level2 =} \StringTok{"daynr"}\NormalTok{, }
+                  \DataTypeTok{level1 =} \StringTok{"beepnr"}\NormalTok{,}
+                  \DataTypeTok{vars =}\NormalTok{ vars,}
+                  \DataTypeTok{covs =} \KeywordTok{c}\NormalTok{(}\StringTok{"Gender2"}\NormalTok{,}\StringTok{"Age"}\NormalTok{),}
+                  \DataTypeTok{randomAll =} \OtherTok{FALSE}\NormalTok{,}
+                  \DataTypeTok{randomVars =}  \OtherTok{NULL}\NormalTok{,   ## c("Fearful","Hopeful"),}
+                  \DataTypeTok{layout =} \StringTok{"spring"}\NormalTok{,}
+                  \DataTypeTok{lagn =} \DecValTok{1}\NormalTok{,}
+                  \DataTypeTok{groups =}\NormalTok{ newsGroup,}
+                  \DataTypeTok{plimit =} \FloatTok{0.05}\NormalTok{,}
+                  \DataTypeTok{solid =}\NormalTok{ .}\DecValTok{20}\NormalTok{,}
+                  \DataTypeTok{labs =}\NormalTok{ labs)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5
+## [1] 6
+## [1] 7
+## [1] 8
+## [1] 9
+## [1] 10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(res}\OperatorTok{$}\NormalTok{output}\OperatorTok{$}\NormalTok{network)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{networkTutorial_files/figure-latex/example1-1.pdf}
+\caption{}
+\end{figure}
+
 \subsection{Indices of centrality}\label{indices-of-centrality}
 
 To better unbderstand the role of the variables in the network several
@@ -192,7 +261,7 @@ of centrality.
 \subsection{Note}\label{note}
 
 We used R (Version 3.5.1; R Core Team, 2018) and the R-packages
-\emph{lagnetw} (Version 0.0.0.9000; Verboon, 2019), and \emph{papaja}
+\emph{lagnetw} (Version 0.0.1; Verboon, 2019), and \emph{papaja}
 (Version 0.1.0.9842; Aust \& Barth, 2018) for all our analyses.
 
 \newpage

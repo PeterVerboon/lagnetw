@@ -65,10 +65,42 @@ library(lagnetw)
 ```
 
 ## ESM 
-
+ short about what and why of ESM data
 
 ## Example
 
+The data for this example (DataNews) are obtained in a ESM study about the effect of daily news perception on mood fluctuations. During 10 days, and 7 times per day, participants had to indicate whether they had perceived news, and if they had, to rate the valence of the news using 5 variables. After that they had to rate their mood using items from the PANAS. 
+After selecting a relevant subset of the data for this example, we construct an object `vars`, which cobtains the variable names that will be used to build the network. To label the vars in the network plot with convenient symbols, we can define labels, which we add in the object `labs`. Furthermore, groups are defined for the variables in the object `newsGroup`. Variables belonging to each other are placed in the same group. Here we have variables that refer to the news, which indicate the subjective valence of the news (the Valence group), and we have mood items, put in the group called "Affect".
+```{r example1, eval = TRUE, echo = TRUE, include = TRUE, warning = FALSE}
+
+data("DataNews")
+ # Select the records where news was perceived
+dat <- subset(DataNews, News_YesNO == 1)      
+vars <- c("Cheerful","Relaxed","Down","Irritated","Insecure","Anxious",
+          "Dramatic","Fearful","Hopeful","Inspiring")
+labs <- c("CH","REL","DOW", "IRR","INS","ANX","DRA","FF","HO","SPI")
+newsGroup <- list(Affect = c(1:6), Valence = c(7:10))
+ # select the relevant variables only
+dat1 <- dat[,c(vars,c("Participant","daynr","beepnr","Gender2","Age"))]    
+
+res <- esmNetwork(dat=dat1, 
+                  subjnr="Participant", 
+                  level2 = "daynr", 
+                  level1 = "beepnr",
+                  vars = vars,
+                  covs = c("Gender2","Age"),
+                  randomAll = FALSE,
+                  randomVars =  NULL,   ## c("Fearful","Hopeful"),
+                  layout = "spring",
+                  lagn = 1,
+                  groups = newsGroup,
+                  plimit = 0.05,
+                  solid = .20,
+                  labs = labs)
+
+plot(res$output$network)
+
+```
 
 
 ## Indices of centrality
