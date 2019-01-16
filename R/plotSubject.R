@@ -47,7 +47,7 @@ plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid
     # add zero's in the random effects for the variables with no random effects
   } else {  
     test <- vars %in% randomVars
-    if (nrand == 0) a <- lme4::ranef(model[[j]])[[1]][select,1]
+    if (nrand == 0) a <- lme4::ranef(model[[1]])[[1]][select,1]
     for (j in 1:nvars) {
       if (nrand > 0) a <- lme4::ranef(model[[j]])[[1]][select,2:(nrand+1)] 
         b <- rep(0,length(test))
