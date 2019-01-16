@@ -23,6 +23,7 @@ plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid
   randomAll <- res$input$randomAll
   nvars <- res$intermediate$numberOfVars
   npred <- res$intermediate$numberOfPreds
+  edge.color <- res$intermediate$edgeColor
   model <- res$output$model
   
   if (!subjectID %in% dat[,subjnr]) stop("subject identification is not in the data")
@@ -44,10 +45,11 @@ plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid
                               lme4::ranef(model[[j]])[[1]][select,2:(nvars+1)]))
     }
     # add zero's in the random effects for the variables with no random effects
-  } else {   
+  } else {  
     test <- vars %in% randomVars
+    if (nrand == 0) a <- lme4::ranef(model[[j]])[[1]][select,1]
     for (j in 1:nvars) {
-        a <- lme4::ranef(model[[j]])[[1]][select,2:(nrand+1)]
+      if (nrand > 0) a <- lme4::ranef(model[[j]])[[1]][select,2:(nrand+1)] 
         b <- rep(0,length(test))
         b[test] <- a
         ind[,j] = as.numeric((lme4::fixef(model[[j]])[(2+ncov):(npred+1)] + 
@@ -61,12 +63,11 @@ jj = rep(1:nvars,each=nvars)
 jk = rep(1:nvars,nvars)
 E3 = data.frame(from = jk, to = jj, weight = as.vector(ind))
 
-edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < plimit, 255, 0))
 
 G3 <- qgraph::qgraph(E3, 
                      layout = layout,
                      labels = labs,
-                     lty = ifelse(E1[,3] > solid, 1, 5),
+                     lty = ifelse(E3[,3] > solid, 1, 5),
                      edge.labels = F,
                      title = paste0("Subject ", subjectID),
                      title.cex = .7)

@@ -115,6 +115,9 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, r
   pvals <- 2*(1-pnorm(abs(unlist(coef1[,(2+npred-nvars):(npred+1)]/se.coef1[,(2+npred-nvars):(npred+1)]) )))
   edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < plimit, 255, 0))
   
+  result$intermediate$pvals <- pvals
+  result$intermediate$edgeColor <- edge.color
+  
   G1 <- qgraph::qgraph(E,fade=FALSE,
                 layout="spring",
                 labels=labs, 
