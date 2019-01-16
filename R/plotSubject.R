@@ -13,7 +13,7 @@
 #' @examples
 #' plotSubject(res = res, subjectID = 31623)
 #' 
-plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid = .10 ) {
+plotSubject <- function(res, subjectID, layout = "circular", solid = .10 ) {
  
   dat <- res$input$dat
   subjnr <- res$input$subjnr
@@ -21,6 +21,7 @@ plotSubject <- function(res, subjectID, layout = "circular", plimit = .05, solid
   labs <- res$input$labs
   randomVars <- res$input$randomVars
   randomAll <- res$input$randomAll
+  groups <- res$input$groups
   nvars <- res$intermediate$numberOfVars
   npred <- res$intermediate$numberOfPreds
   edge.color <- res$intermediate$edgeColor
@@ -67,6 +68,7 @@ E3 = data.frame(from = jk, to = jj, weight = as.vector(ind))
 G3 <- qgraph::qgraph(E3, 
                      layout = layout,
                      labels = labs,
+                     groups = groups,
                      lty = ifelse(E3[,3] > solid, 1, 5),
                      edge.labels = F,
                      title = paste0("Subject ", subjectID),
