@@ -22,7 +22,7 @@
 #'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
 esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, randomAll = FALSE, randomVars = NULL, 
-                       lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
+                       groups = NULL, lagn=1, labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
   
   result <- list(input = as.list(environment()),
                  intermediate = list(),
@@ -119,12 +119,13 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, r
   result$intermediate$edgeColor <- edge.color
   
   G1 <- qgraph::qgraph(E,fade=FALSE,
-                layout="spring",
-                labels=labs, 
-                lty=ifelse(E[,3] > solid, 1, 5),
-                edge.labels=F,
-                edge.color=edge.color, 
-                title=titlePlot)
+                       groups = groups,
+                       layout="spring",
+                       labels=labs, 
+                       lty=ifelse(E[,3] > solid, 1, 5),
+                       edge.labels=F,
+                       edge.color=edge.color, 
+                       title=titlePlot)
  
    ## centrality measures
   
