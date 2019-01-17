@@ -152,6 +152,20 @@ do a network analysis.
 
 }
 
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[section]
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[section]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
 \begin{document}
 \maketitle
 
@@ -181,22 +195,47 @@ can be installed from Github and then loaded using the
 
 \subsection{ESM}\label{esm}
 
+short about what and why of ESM data
+
+\subsection{Building a Network}\label{building-a-network}
+
+There are many ways to construct a network of psychological variables
+{[}refs{]}. For instance, a network can simply build from the
+correlation matrix using the \texttt{qgraph} package {[}Epstein{]}.
+Here, we demonstrate the multilevel regression approach with lagged
+variables. The general idea is that we estimate for each variable
+measured at time t, the strengh of the effect of all the other variables
+on it, where the predictors are measured at time t-1.The effects of a
+predictor on a given variable, say y(t), is controlled for by all other
+predictors, including the given variable measured at t-1 (y(t-1)).
+
+\begin{equation}
+ y_j(t) = b_0 + b_{jk} y_k(t-1) + e_j.
+\end{equation}
+
+where j = 1,..,M and k = 1,..,M. When we have M variables for which we
+want to build a network, there are also M predictors for each variable.
+THe regression coefficients are gatherd in a square matrix. The diagonal
+of this matrix represents the effects of Y\_t-1 on Y\_t, controlled for
+the other predictors.
+
 \subsection{Example}\label{example}
 
 The data for this example (DataNews) are obtained in a ESM study about
 the effect of daily news perception on mood fluctuations. During 10
-days, and 7 times per day, participants had to indicate whether they had
-perceived news, and if they had, to rate the valence of the news using 5
-variables. After that they had to rate their mood using items from the
-PANAS. After selecting a relevant subset of the data for this example,
-we construct an object \texttt{vars}, which cobtains the variable names
-that will be used to build the network. To label the vars in the network
-plot with convenient symbols, we can define labels, which we add in the
-object \texttt{labs}. Furthermore, groups are defined for the variables
-in the object \texttt{newsGroup}. Variables belonging to each other are
-placed in the same group. Here we have variables that refer to the news,
-which indicate the subjective valence of the news (the Valence group),
-and we have mood items, put in the group called \enquote{Affect}.
+days, and at 7 random moments per day, participants indicated whether
+they had perceived news, and if they had, to rate the valence of the
+news using 5 variables. After that they had to rate their mood using
+items from the PANAS. After selecting a relevant subset of the data for
+this example, we construct an object \texttt{vars}, which cobtains the
+variable names that will be used to build the network. To label the vars
+in the network plot with convenient symbols, we can define labels, which
+we add in the object \texttt{labs}. Furthermore, groups are defined for
+the variables in the object \texttt{newsGroup}. Variables belonging to
+each other are placed in the same group. Here we have variables that
+refer to the news, which indicate the subjective valence of the news
+(the Valence group), and we have mood items, put in the group called
+\enquote{Affect}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -224,33 +263,13 @@ and we have mood items, put in the group called \enquote{Affect}.
                   \DataTypeTok{plimit =} \FloatTok{0.05}\NormalTok{,}
                   \DataTypeTok{solid =}\NormalTok{ .}\DecValTok{20}\NormalTok{,}
                   \DataTypeTok{labs =}\NormalTok{ labs)}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## [1] 1
-## [1] 2
-## [1] 3
-## [1] 4
-## [1] 5
-## [1] 6
-## [1] 7
-## [1] 8
-## [1] 9
-## [1] 10
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{plot}\NormalTok{(res}\OperatorTok{$}\NormalTok{output}\OperatorTok{$}\NormalTok{network)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
-\centering
-\includegraphics{networkTutorial_files/figure-latex/example1-1.pdf}
-\caption{}
-\end{figure}
+The function `esmNetwork()' is used to run the analyses and build a
+network based on these analyses.
 
 \subsection{Indices of centrality}\label{indices-of-centrality}
 
@@ -280,20 +299,20 @@ R Markdown}. Retrieved from \url{https://github.com/crsh/papaja}
 Bringmann, L., \& Eronen, M. (2018). Don't blame the model:
 Reconsidering the network approach to psychopathology.
 \emph{Psychological Review}, \emph{125}(4), 606--615.
-doi:\href{https://doi.org/10.1037/rev0000108}{10.1037/rev0000108}
+\url{https://doi.org/10.1037/rev0000108}
 
 \hypertarget{ref-Costantini2015}{}
 Costantini, G., Epskamp, S., Borsboom, D., Perugini, M., Mõttus, R.,
 Waldorp, L. J., \& Cramer, A. O. (2015). State of the aRt personality
 research: A tutorial on network analysis of personality data in R.
 \emph{Journal of Research in Personality}, \emph{54}, 13--29.
-doi:\href{https://doi.org/10.1016/j.jrp.2014.07.003}{10.1016/j.jrp.2014.07.003}
+\url{https://doi.org/10.1016/j.jrp.2014.07.003}
 
 \hypertarget{ref-Epskamp2018}{}
 Epskamp, S., Borsboom, D., \& Fried, E. I. (2018). Estimating
 psychological networks and their accuracy: A tutorial paper.
 \emph{Behavior Research Methods}, \emph{50}(1), 195--212.
-doi:\href{https://doi.org/10.3758/s13428-017-0862-1}{10.3758/s13428-017-0862-1}
+\url{https://doi.org/10.3758/s13428-017-0862-1}
 
 \hypertarget{ref-R-base}{}
 R Core Team. (2018). \emph{R: A language and environment for statistical

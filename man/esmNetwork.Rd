@@ -5,8 +5,9 @@
 \title{Function to compute network of ESM variables using lags in multilevel analysis}
 \usage{
 esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
-  randomAll = FALSE, randomVars = NULL, lagn = 1, labs = NULL,
-  solid = 0.1, plimit = 0.05, titlePlot = "Figure")
+  randomAll = FALSE, randomVars = NULL, groups = NULL, lagn = 1,
+  layout = "spring", labs = NULL, solid = 0.1, plimit = 0.05,
+  titlePlot = "Figure")
 }
 \arguments{
 \item{dat}{data frame}

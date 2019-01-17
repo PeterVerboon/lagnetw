@@ -4,8 +4,7 @@
 \alias{plotSubject}
 \title{Network plot of an individual}
 \usage{
-plotSubject(res, subjectID, layout = "circular", plimit = 0.05,
-  solid = 0.1)
+plotSubject(res, subjectID, layout = "circular", solid = 0.1)
 }
 \arguments{
 \item{res}{result of class "esmNetwork"}
@@ -14,9 +13,9 @@ plotSubject(res, subjectID, layout = "circular", plimit = 0.05,
 
 \item{layout}{layout of the plot (see documentation of qgraph)}
 
-\item{plimit}{p-value under which lines are shown (default = .05)}
-
 \item{solid}{effect size above which lines are shown as solid (default = .10)}
+
+\item{plimit}{p-value under which lines are shown (default = .05)}
 }
 \value{
 an individual qgraph plot (network)
