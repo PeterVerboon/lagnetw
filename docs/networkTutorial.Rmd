@@ -72,11 +72,22 @@ There are many ways to construct a network of psychological variables [refs]. Fo
 The general idea is that we estimate for each variable measured at time t, the strengh of the effect of all the other variables on it, where the predictors are measured at time t-1.The effects of a predictor on a given variable, say y(t), is controlled for by all other predictors, including the given variable measured at t-1 (y(t-1)). 
 
 \begin{equation}
- y_j(t) = b_0 + b_{jk} y_k(t-1) + e_j.
+ y_j(t) = b_{j0} + \sum_{k=1}^{M} b_{jk} y_k(t-1) + e_j.
 \end{equation}
 
 where j = 1,..,M and k = 1,..,M.
-When we have M variables for which we want to build a network, there are also M predictors for each variable. THe regression coefficients are gatherd in a square matrix. The diagonal of this matrix represents the effects of Y_t-1 on Y_t, controlled for the other predictors.
+When we have M variables for which we want to build a network, there are also M predictors for each variable. After running the analyses the regression coefficients are gathered in a square matrix. The diagonal of this matrix represents the effects of y(t-1) on y(t), controlled for the other predictors.
+Since ESM data are hierarchical, the measurements are clustered within days and within subjects. To deal with possible cluster effects of subjects, the regression model shown in formula (1) is extended to a multilevel model in which the intercepts and slopes are allowed to vary across individuals (see formula (2))
+
+\begin{equation}
+ \begin{split}
+y_{ij}(t) = b_{ij0} + \sum_{k=1}^{M} b_{ijk} y_{ik}(t-1) + e_{ij}\\
+b_{ij0} = b_{j0} + u_{ij0}\\ 
+b_{ijk} = b_{jk} + u_{ijk}. 
+ \end{split}
+\end{equation}
+
+
 
 
 ## Example

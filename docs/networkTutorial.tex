@@ -210,14 +210,25 @@ predictor on a given variable, say y(t), is controlled for by all other
 predictors, including the given variable measured at t-1 (y(t-1)).
 
 \begin{equation}
- y_j(t) = b_0 + b_{jk} y_k(t-1) + e_j.
+ y_j(t) = b_{j0} + \sum_{k=1}^{M} b_{jk} y_k(t-1) + e_j.
 \end{equation}
 
 where j = 1,..,M and k = 1,..,M. When we have M variables for which we
 want to build a network, there are also M predictors for each variable.
-THe regression coefficients are gatherd in a square matrix. The diagonal
-of this matrix represents the effects of Y\_t-1 on Y\_t, controlled for
-the other predictors.
+After running the analyses the regression coefficients are gathered in a
+square matrix. The diagonal of this matrix represents the effects of
+y(t-1) on y(t), controlled for the other predictors. Since ESM data are
+hierarchical, the measurements are clustered within days and within
+subjects. To deal with possible cluster effects of subjects, the
+regression model shown in formula (1) is extended to a multilevel model.
+
+\begin{equation}
+ \begin{split}
+y_{ij}(t) = b_{ij0} + \sum_{k=1}^{M} b_{ijk} y_{ik}(t-1) + e_{ij}\\
+b_{ij0} = b_{j0} + u_{ij0}\\ 
+b_{ijk} = b_{jk} + u_{ijk}. 
+ \end{split}
+\end{equation}
 
 \subsection{Example}\label{example}
 
