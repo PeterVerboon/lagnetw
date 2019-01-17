@@ -21,8 +21,10 @@
 #' res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
 #'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
-esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, randomAll = FALSE, randomVars = NULL, 
-                       groups = NULL, lagn=1, layout = "spring", labs=NULL, solid = .10, plimit = .05, titlePlot="Figure"){
+esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, 
+                       randomAll = FALSE, randomVars = NULL, 
+                       groups = NULL, lagn=1, layout = "spring", labs=NULL, 
+                       solid = .10, plimit = .05, titlePlot="Figure"){
   
   result <- list(input = as.list(environment()),
                  intermediate = list(),
