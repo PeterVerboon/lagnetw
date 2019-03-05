@@ -7,6 +7,9 @@
 #' @param level2 variable name, indicating level 2 variable, e.g. days
 #' @param vars vector with the names of the variables for which the network is computed
 #' @param covs covariates in the analyses, which are not plotted in the network
+#' @param randomAll logical indicates whether all variables should be used as random effects
+#' @param randomVars vector of variable names, used as random effects
+#' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
