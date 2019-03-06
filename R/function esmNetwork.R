@@ -11,6 +11,8 @@
 #' @param randomVars vector of variable names, used as random effects
 #' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
+#' @param centered character indicating if variables should be person centered ("person"), 
+#'                 grand mean centered ("grand_mean") or not centered ("NULL")
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
 #' @param plimit p-value under which lines are shown (default = .05)
@@ -26,7 +28,8 @@
 #'        
 esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, 
                        randomAll = FALSE, randomVars = NULL, 
-                       groups = NULL, lagn=1, layout = "spring", labs=NULL, 
+                       groups = NULL, lagn=1, centered = "person",
+                       layout = "spring", labs=NULL, 
                        solid = .10, plimit = .05, titlePlot="Figure"){
   
   result <- list(input = as.list(environment()),
@@ -37,6 +40,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   
   nvars <- length(vars)                # number of variables involved in the network analyses
   npred <- length(covs) + nvars        # number of predictors involved in the analyses
+  allpred <- c(covs, vars)
   
   result$intermediate$numberOfVars <- nvars
   result$intermediate$numberOfPreds <- npred
@@ -46,6 +50,24 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
    dat1 <- dat[,c(subjnr,level2,level1, covs,vars)]
+   
+   # Person mean centered
+   if(centered == "person") {
+       for (i in seq_along(allpred)) 
+         {
+           xx <- allpred[i]
+           if (is.numeric(dat1[,xx]))
+               dat1[,xx] <- dat1[,xx] - ave(dat1[,xx], dat1[,subjnr], FUN = mean, na.rm=TRUE)
+         }
+   }
+   # Grand mean centered
+   if (centered == "grand_mean") {
+     for (i in seq_along(allpred)) {
+       xx <- allpred[i]
+       if (is.numeric(dat1[,xx]))
+          dat1[,xx] <- dat1[,xx] - mean(dat1[,xx], na.rm=TRUE)
+     }
+   }
   
    if (is.null(labs)) { labs <- vars}
 
