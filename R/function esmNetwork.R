@@ -12,7 +12,7 @@
 #' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
 #' @param centered character indicating if variables should be person centered ("person"), 
-#'                 grand mean centered ("grand_mean") or not centered ("NULL")
+#'                 grand mean centered ("grand_mean") or not centered ("no")
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
 #' @param plimit p-value under which lines are shown (default = .05)
@@ -46,6 +46,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   result$intermediate$numberOfPreds <- npred
   
   if (nvars < 3) { stop("Number of variables in the network should be more than 2") }
+  if (is.null(centered)) centered <- "no"
   
   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
