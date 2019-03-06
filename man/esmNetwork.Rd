@@ -6,8 +6,8 @@
 \usage{
 esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
   randomAll = FALSE, randomVars = NULL, groups = NULL, lagn = 1,
-  layout = "spring", labs = NULL, solid = 0.1, plimit = 0.05,
-  titlePlot = "Figure")
+  centered = "person", layout = "spring", labs = NULL, solid = 0.1,
+  plimit = 0.05, titlePlot = "Figure")
 }
 \arguments{
 \item{dat}{data frame}
@@ -22,7 +22,16 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 
 \item{covs}{covariates in the analyses, which are not plotted in the network}
 
+\item{randomAll}{logical indicates whether all variables should be used as random effects}
+
+\item{randomVars}{vector of variable names, used as random effects}
+
+\item{groups}{variable used to label groups in the network figure}
+
 \item{lagn}{number of lags used in the network}
+
+\item{centered}{character indicating if variables should be person centered ("person"), 
+grand mean centered ("grand_mean") or not centered ("no")}
 
 \item{labs}{labels used in the network plot}
 
