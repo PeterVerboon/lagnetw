@@ -42,8 +42,10 @@ if (is.null(level2)) {
 }
   
 ## add additional beeps at the end of each day with missings
- 
-dat <- data[,c(subjnr,level2, level1, varnames)]
+
+rest <- names(data)[!names(data) %in% c(subjnr,level2, level1, varnames)]
+dat <- data[,c(subjnr,level2, level1, varnames, rest)]
+
 vdaynr <- rep(sort(unique(dat[,level2])), length(unique(dat[,subjnr])));  
 vsubjnr <- rep(unique(dat[,subjnr]), each=length(unique(dat[,level2])) )
 
