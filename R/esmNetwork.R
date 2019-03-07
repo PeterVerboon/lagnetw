@@ -11,7 +11,7 @@
 #' @param randomVars vector of variable names, used as random effects
 #' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
-#' @param centered character indicating if variables should be person centered ("person"), 
+#' @param centered character indicating if network variables should be person centered ("person"), 
 #'                 grand mean centered ("grand_mean") or not centered ("no")
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
@@ -52,24 +52,27 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   
    dat1 <- dat[,c(subjnr,level2,level1, covs,vars)]
    
-   # Person mean centered
+   # Person mean centering of netork variables
    if(centered == "person") {
-       for (i in seq_along(allpred)) 
+       for (i in seq_along(vars)) 
          {
-           xx <- allpred[i]
+           xx <- vars[i]
            if (is.numeric(dat1[,xx]))
                dat1[,xx] <- dat1[,xx] - ave(dat1[,xx], dat1[,subjnr], FUN = mean, na.rm=TRUE)
-         }
+       }
    }
-   # Grand mean centered
+   
+   # Grand mean centering of network variables
    if (centered == "grand_mean") {
-     for (i in seq_along(allpred)) {
-       xx <- allpred[i]
+     for (i in seq_along(vars)) {
+       xx <- vars[i]
        if (is.numeric(dat1[,xx]))
           dat1[,xx] <- dat1[,xx] - mean(dat1[,xx], na.rm=TRUE)
      }
    }
   
+   result$intermediate$centeredData <- dat1
+   
    if (is.null(labs)) { labs <- vars}
 
   # Vector of predictor names (lagged variables)
@@ -110,7 +113,8 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                  level1=level1, 
                  lagn=lagn, 
                  varnames=vars)
-
+  
+  result$intermediate$laggedData <- dat2
   
   ### run MLA for all variables in network
   
@@ -120,6 +124,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
     ff=as.formula(paste(vars[j],"~", pred1, sep="")); 
     model1[[j]]<-lme4::lmer(ff, data=dat2, REML=FALSE)
     print(j)
+    print(ff)
   }
   
   
