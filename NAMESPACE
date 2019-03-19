@@ -2,5 +2,6 @@
 
 export(LagESM)
 export(addTrans)
+export(centerESM)
 export(esmNetwork)
 export(plotSubject)

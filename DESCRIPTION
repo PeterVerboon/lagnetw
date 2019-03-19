@@ -12,4 +12,6 @@ RoxygenNote: 6.1.1
 Imports: lme4,
     qgraph,
     arm,
-    DataCombine
+    DataCombine,
+    stats,
+    base
