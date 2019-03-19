@@ -48,11 +48,11 @@ dat1 <- data
     if (is.numeric(dat1[,xx])) {
       
       if (center[i] == "person") {
-        pmean <- ave(dat1[,xx], dat1[,subjnr], FUN = mean, na.rm=TRUE)
+        pmean <- stats::ave(dat1[,xx], dat1[,subjnr], FUN = mean, na.rm=TRUE)
         dat1[,xx] <- dat1[,xx] - pmean
         if (addmeans == TRUE) dat1[,paste0(varnames[i],"_means")] <- pmean
       }
-      if (center[i] == "grand_mean") dat1[,xx] <- dat1[,xx] - mean(dat1[,xx], na.rm=TRUE)
+      if (center[i] == "grand_mean") dat1[,xx] <- dat1[,xx] - base::mean(dat1[,xx], na.rm=TRUE)
       if (is.numeric(center[i])) dat1[,xx] <- dat1[,xx] - center[i]
     }
   }
