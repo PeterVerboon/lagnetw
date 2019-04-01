@@ -9,6 +9,8 @@
 #' @param covs covariates in the analyses, which are not plotted in the network
 #' @param randomAll logical indicates whether all variables should be used as random effects
 #' @param randomVars vector of variable names, used as random effects
+#' @param randomIcept logical indicating whther there is a random intercept (TRUE) or not (FALSE)
+#' @param fixedIcept logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)
 #' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
 #' @param centerType vector of same length as vars that indicates for each variable which centering must be,
@@ -30,6 +32,7 @@
 #'        
 esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, 
                        randomAll = FALSE, randomVars = NULL, 
+                       randomIcept = TRUE, fixedIcept = TRUE,
                        groups = NULL, lagn=1, centerType = "person",
                        layout = "spring", labs=NULL, 
                        solid = .10, plimit = .05, titlePlot="Figure"){
@@ -39,6 +42,17 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                  output = list());
   
   result$intermediate$dataName <- as.character(deparse(substitute(dat)));
+  
+  
+  if (!is.null(centerType)) {
+    if (sum(!centerType %in% c("person","grand_mean") ) > 0) 
+      return(cat("centerType is not correctly specified","\n"))
+    if (length(vars) != length(centerType) & length(centerType) > 1)  
+      return(cat("Number of variables in varnames does not equal length of center","\n")) 
+  }
+  
+  if(randomAll == FALSE & is.null(randomVars) == TRUE & randomIcept == FALSE) {
+     return(cat("Analysis not run, because no random effects were specified.","\n")) }
   
   nvars <- length(vars)                # number of variables involved in the network analyses
   npred <- length(covs) + nvars        # number of predictors involved in the analyses
@@ -76,7 +90,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   # Vector of predictor names with random effect (lagged variables)
    
    if (!is.null(randomVars)) { 
-     vrandom <- 1 
+     vrandom <- ifelse(randomIcept, 1, 0)
        for (i in (seq_along(randomVars))) {
            vrandom <- paste0(vrandom, "+", randomVars[i],"L",lagn)
        }
@@ -95,6 +109,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
      pred1 <- paste0("(",covs2, varsp," + (", vrandom, "|",subjnr,"))") 
    }
    
+   if (fixedIcept == FALSE) pred1 <- paste0("-1 + ", pred1) 
  
   ## Construct lagged variables
    
