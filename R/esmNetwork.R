@@ -111,8 +111,6 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   for (j in 1:nvars) {
     ff=as.formula(paste(vars[j],"~", pred1, sep="")); 
     model1[[j]]<-lme4::lmer(ff, data=dat2, REML=FALSE)
-    print(j)
-    print(ff)
   }
   
   
