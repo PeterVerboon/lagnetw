@@ -52,7 +52,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
    # center data
-   
+ 
   if (!is.null(centerType)) {
      dat1 <- centerESM(data = dat,
                        subjnr = subjnr,
@@ -62,6 +62,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   } else {
     dat1 <- dat
   }
+  result$intermediate$workData1 <- dat1
   
   if (is.null(labs)) { labs <- vars}
 
@@ -104,7 +105,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                  lagn=lagn, 
                  varnames=vars)
   
-  result$intermediate$workData <- dat2
+  result$intermediate$workData2 <- dat2
   
   ### run MLA for all variables in network
   

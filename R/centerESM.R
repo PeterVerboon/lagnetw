@@ -36,10 +36,11 @@ if (!is.null(center))
    if (length(varnames) != length(center))  
      return(cat("Number of variables in varnames does not equal length of center","\n")) 
 
-#  if(!subjnr %in% names(data)) 
-#    return(cat("Name of subjnr is not correctly specified in function centerESM","\n")) 
+  if(!subjnr %in% names(data)) 
+    return(cat("Name of subjnr is not correctly specified in function centerESM","\n")) 
 
 dat1 <- data
+
 
 
 # centering of variables
@@ -50,7 +51,8 @@ dat1 <- data
     if (is.numeric(dat1[,xx])) {
       
       if (center[i] == "person") {
-        pmean <- stats::ave(dat1[,xx], dat1[,subjnr], FUN = mean, na.rm=TRUE)
+        group <- as.factor(dat1[,subjnr])
+        pmean <- stats::ave(dat1[,xx], group, FUN = function(x) mean(x, na.rm=T)); 
         dat1[,xx] <- dat1[,xx] - pmean
         if (addmeans == TRUE) dat1[,paste0(varnames[i],"_means")] <- pmean
       }
