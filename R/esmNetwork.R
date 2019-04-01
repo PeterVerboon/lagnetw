@@ -12,8 +12,9 @@
 #' @param groups variable used to label groups in the network figure
 #' @param lagn number of lags used in the network
 #' @param centerType vector of same length as vars that indicates for each variable which centering must be,
-#'               applied, either "person" or "grand_mean" or a number. If only "person" is specified (default), 
-#'               all variables are person centered. If centerType is NULL no variables are centered.
+#'               applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
+#'               all variables are person or grand-mean centered, respectively.
+#'               If centerType is NULL no variables are centered.
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
 #' @param plimit p-value under which lines are shown (default = .05)
@@ -53,14 +54,14 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
    # center data
    
   if (!is.null(centerType)) {
-     dat1 <- centerESM(data = dat, subjnr=subjnr,
-                       addmeans = TRUE, 
-                       varnames = vars, 
+     dat1 <- centerESM(data = dat,
+                       subjnr = subjnr,
+                       addmeans = TRUE,
+                       varnames = vars,
                        center = centerType)
   }
   
-  
-   if (is.null(labs)) { labs <- vars}
+  if (is.null(labs)) { labs <- vars}
 
   # Vector of predictor names (lagged variables)
    

@@ -4,7 +4,7 @@
 \alias{centerESM}
 \title{Function to compute lagged n variables in ESM data and add it to data}
 \usage{
-centerESM(data, subjnr = "subjnr", addmeans = TRUE, varnames = NULL,
+centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL,
   center = NULL)
 }
 \arguments{
@@ -16,8 +16,9 @@ centerESM(data, subjnr = "subjnr", addmeans = TRUE, varnames = NULL,
 \item{varnames}{vector with the names of the variables which are centered.}
 
 \item{center}{vector of same length as varnames that indicates for each variable which centering must be,
-applied, either "person" or "grand_mean" or a number. If only "person" is specified (default), 
-all variables are person centered. If center is NULL no variables are centered.}
+applied, either "person" or "grand_mean" or a number. If "person" or "grand_mean" is specified once (default), 
+all variables are person or grand-mean centered, respectively. 
+If center is NULL no variables are centered and a warning is issued.}
 
 \item{dat}{data frame}
 
@@ -32,7 +33,7 @@ data frame with centered variables, and if requested, person means with suffix "
 Function to compute lagged n variables in ESM data and add it to data
 }
 \examples{
-data("newsData")
+data("DataNews")
 res <- centerESM(data = DataNews, subjnr="subjnr",
        addmeans = TRUE, 
        varnames = c("Lonely", "Relaxed", "Anxious"), 

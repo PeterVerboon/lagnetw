@@ -7,8 +7,9 @@
 #' @param level1 variable, indicating level 1 variable, e.g. beeps. Must be specified.
 #' @param varnames vector with the names of the variables which are centered.
 #' @param center vector of same length as varnames that indicates for each variable which centering must be,
-#'               applied, either "person" or "grand_mean" or a number. If only "person" is specified (default), 
-#'               all variables are person centered. If center is NULL no variables are centered.
+#'               applied, either "person" or "grand_mean" or a number. If "person" or "grand_mean" is specified once (default), 
+#'               all variables are person or grand-mean centered, respectively. 
+#'               If center is NULL no variables are centered and a warning is issued.
 #' @param addmeans logical indicating whether a vector of person means should be added to the data 
 #'               (works only if person centering is requested for that variable).             
 #'
@@ -16,16 +17,17 @@
 #' @export
 #'
 #' @examples
-#' data("newsData")
+#' data("DataNews")
 #' res <- centerESM(data = DataNews, subjnr="subjnr",
 #'        addmeans = TRUE, 
 #'        varnames = c("Lonely", "Relaxed", "Anxious"), 
 #'        center = c("person", "person", "person"))
 
-centerESM <- function(data, subjnr="subjnr", addmeans = TRUE, varnames = NULL, center = NULL) {
+centerESM <- function(data, subjnr = NULL, addmeans = TRUE, varnames = NULL, center = NULL) {
   
 if (is.null(varnames)) return(cat("Argument varnames is not specified in function centerESM","\n"))
-
+if (is.null(subjnr)) return(cat("Argument subjnr is not specified in function centerESM","\n"))
+  
 if (is.null(center))  return(cat("Warning: no centering is requested","\n"))
 if (length(center) == 1 && center == "person")  center <- rep("person", length(varnames))
 if (length(center) == 1 && center == "grand_mean")  center <- rep("grand_mean", length(varnames))
@@ -34,8 +36,8 @@ if (!is.null(center))
    if (length(varnames) != length(center))  
      return(cat("Number of variables in varnames does not equal length of center","\n")) 
 
-  if(!subjnr %in% names(data)) 
-    return(cat("Name of subjnr is not correctly specified in function centerESM","\n")) 
+#  if(!subjnr %in% names(data)) 
+#    return(cat("Name of subjnr is not correctly specified in function centerESM","\n")) 
 
 dat1 <- data
 
@@ -62,13 +64,6 @@ dat1 <- data
 }   # end function
 
 
-#TEST
-
-datC <- centerESM(data = DataNews, subjnr="Participant", 
-                         addmeans = TRUE, 
-                         varnames = c("Lonely", "Relaxed", "Anxious"), 
-                         center = "person")
-                 
 
 
 

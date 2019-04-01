@@ -31,8 +31,9 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 \item{lagn}{number of lags used in the network}
 
 \item{centerType}{vector of same length as vars that indicates for each variable which centering must be,
-applied, either "person" or "grand_mean" or a number. If only "person" is specified (default), 
-all variables are person centered. If centerType is NULL no variables are centered.}
+applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
+all variables are person or grand-mean centered, respectively.
+If centerType is NULL no variables are centered.}
 
 \item{labs}{labels used in the network plot}
 
