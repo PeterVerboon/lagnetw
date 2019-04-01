@@ -59,6 +59,8 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                        addmeans = TRUE,
                        varnames = vars,
                        center = centerType)
+  } else {
+    dat1 <- dat
   }
   
   if (is.null(labs)) { labs <- vars}
