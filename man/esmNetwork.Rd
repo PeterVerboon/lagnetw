@@ -5,7 +5,8 @@
 \title{Function to compute network of ESM variables using lags in multilevel analysis}
 \usage{
 esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
-  randomAll = FALSE, randomVars = NULL, groups = NULL, lagn = 1,
+  randomAll = FALSE, randomVars = NULL, randomIcept = TRUE,
+  fixedIcept = TRUE, groups = NULL, lagn = 1,
   centerType = "person", layout = "spring", labs = NULL,
   solid = 0.1, plimit = 0.05, titlePlot = "Figure")
 }
@@ -25,6 +26,10 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 \item{randomAll}{logical indicates whether all variables should be used as random effects}
 
 \item{randomVars}{vector of variable names, used as random effects}
+
+\item{randomIcept}{logical indicating whther there is a random intercept (TRUE) or not (FALSE)}
+
+\item{fixedIcept}{logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)}
 
 \item{groups}{variable used to label groups in the network figure}
 
