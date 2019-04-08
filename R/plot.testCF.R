@@ -13,16 +13,16 @@
 plot.testCF <- function(x, type=1) {
   
   a <- x$output$perms[,type]
-  outp <- x$output$pval[type,1]
+  est <- x$output$pvals[type,1]
+  lab <- colnames(x$output$perms)[type]
   
 df <- with(density(a), data.frame(x, y))
 meanEst <- mean(df$x)
-est <- outp[1,1]
 cutoff1 <- quantile(a,0.025)
 cutoff2 <- quantile(a,0.975)
 
-ylim1 <- as.numeric((df[(min(abs(df$x - est)) == abs(df$x - est)),])[2])
-ylim2 <- as.numeric((df[(min(abs(df$x - meanEst)) == abs(df$x - meanEst)),])[2])
+ylim1 <- colMeans((df[(min(abs(df$x - est)) == abs(df$x - est)),])[2])
+ylim2 <- colMeans((df[(min(abs(df$x - meanEst)) == abs(df$x - meanEst)),])[2])
 
 p <- ggplot(data = df, aes(x = x, y = y)) + geom_line()
 p <- p + geom_segment(aes(x=est, y=0, xend = est, yend=ylim1),color="blue", linetype="dashed", size=.5)
@@ -31,7 +31,7 @@ p <- p + geom_ribbon(data=subset(df ,x<=cutoff1 ),aes(ymax=y,ymin=0),
                      fill="gray10",colour=NA,alpha=0.5)
 p <- p + geom_ribbon(data=subset(df ,x>=cutoff2 ),aes(ymax=y,ymin=0),
                      fill="gray10",colour=NA,alpha=0.5)
-p <- p + ggtitle("Permutation distribution with observed estimate")
+p <- p + ggtitle(paste("Permutation distribution",lab," with observed estimate"))
 
  return(p)
 

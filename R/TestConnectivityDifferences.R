@@ -99,7 +99,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   diag(b1) <- NA
   diag(b2) <- NA
   b.diff.obs[3] <- mean(abs(b1), na.rm=TRUE) - mean(abs(b2), na.rm=TRUE)
-  b.diff.obs[4] <- sd(b1.perm, na.rm =TRUE) - sd(b2.perm, na.rm =TRUE)
+  b.diff.obs[4] <- sd(b1, na.rm =TRUE) - sd(b2, na.rm =TRUE)
   
   p.perm.def1 <- p.perm.def2 <- rep(NA, length(b.diff.obs))
   for (j in 1:length(b.diff.obs)) {
@@ -115,29 +115,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   res$output$perms <- permres <- data.frame(permres)
   
   colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
-  
-  
-  ### Plot result
- 
-  df <- with(density(a <- permres$total.diff), data.frame(x, y))
-  meanEst <- mean(df$x)
-  est <- outp[1,1]
-  cutoff1 <- quantile(a,0.025)
-  cutoff2 <- quantile(a,0.975)
-  
-  ylim1 <- as.numeric((df[(min(abs(df$x - est)) == abs(df$x - est)),])[2])
-  ylim2 <- as.numeric((df[(min(abs(df$x - meanEst)) == abs(df$x - meanEst)),])[2])
-  
-  p <- ggplot(data = df, aes(x = x, y = y)) + geom_line()
-  p <- p + geom_segment(aes(x=est, y=0, xend = est, yend=ylim1),color="blue", linetype="dashed", size=.5)
-  p <- p + geom_segment(aes(x=meanEst, y=0, xend = meanEst, yend=ylim2),color="black", size=.5)
-  p <- p + geom_ribbon(data=subset(df ,x<=cutoff1 ),aes(ymax=y,ymin=0),
-              fill="gray10",colour=NA,alpha=0.5)
-  p <- p + geom_ribbon(data=subset(df ,x>=cutoff2 ),aes(ymax=y,ymin=0),
-                       fill="gray10",colour=NA,alpha=0.5)
-  p <- p + ggtitle("Permutation distribution with observed estimate")
-  
-  res$output$permDensityPlot <- p
+
   
   class(res) <- "testCF"
   return(res)
