@@ -7,8 +7,9 @@
 #' @param vars vector with the names of the variables which are centered.
 #' @param randomVars logical, indicating whether the variables should be included as random effects.
 #' @param perms number of permutations.             
-#'
-#' @return data frame with centered variables, and if requested, person means with suffix "_means".
+#' @import ggplot2
+#' @return Estimate of difference between groups wrt network connectivity with p value based on permutations.
+#'            and permutation distribution
 #' @export
 #'
 #' @examples
@@ -88,8 +89,8 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   ### table with permutation based p-values (two definitions of the p-values)
   
-  b.diff.obs <- rep(NA_real_, 3)
-  names(b.diff.obs) <- c("grp1_vs_grp2_all", "grp1_vs_grp2_diag", "grp1_vs_grp2_off")
+  b.diff.obs <- rep(NA_real_, 4)
+  names(b.diff.obs) <- c("total diff", "diagonal diff", "offdiag diff", "SD diff")
   
   b.diff.obs[1] <- mean(abs(b1)) - mean(abs(b2))
   b.diff.obs[2] <- mean(abs(diag(b1))) - mean(abs(diag(b2)))
@@ -98,6 +99,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   diag(b1) <- NA
   diag(b2) <- NA
   b.diff.obs[3] <- mean(abs(b1), na.rm=TRUE) - mean(abs(b2), na.rm=TRUE)
+  b.diff.obs[4] <- sd(b1.perm, na.rm =TRUE) - sd(b2.perm, na.rm =TRUE)
   
   p.perm.def1 <- p.perm.def2 <- rep(NA, length(b.diff.obs))
   for (j in 1:length(b.diff.obs)) {
@@ -116,8 +118,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   
   ### Plot result
-  require(ggplot2)
-  
+ 
   df <- with(density(a <- permres$total.diff), data.frame(x, y))
   meanEst <- mean(df$x)
   est <- outp[1,1]
@@ -138,6 +139,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   res$output$permDensityPlot <- p
   
+  class(res) <- "testCF"
   return(res)
   
 } # end function

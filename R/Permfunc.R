@@ -17,10 +17,11 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
   setTxtProgressBar(pb, perms)
 
    ### set up matrices to store coefficients in
-   b1.perm <- matrix(NA, nrow=k, ncol=k)
-   b2.perm <- matrix(NA, nrow=k, ncol=k)
+    k <- length(outnames)
+    
+    b1.perm <- matrix(NA, nrow=k, ncol=k)
+    b2.perm <- matrix(NA, nrow=k, ncol=k)
    
-   k <- length(outnames)
   
    ### reshuffle group variable
    dat$group <- rep(sample(group.per.person), times=nobs.per.person)
