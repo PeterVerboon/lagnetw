@@ -69,14 +69,14 @@ library(lagnetw)
  
 ## Building a Network
 There are many ways to construct a network of psychological variables [refs]. For instance, a network can simply build from the correlation matrix using the `qgraph` package [Epstein]. Here, we demonstrate the multilevel regression approach with lagged variables. 
-The general idea is that we estimate for each variable measured at time t, the strengh of the effect of all the other variables on it, where the predictors are measured at time t-1.The effects of a predictor on a given variable, say y(t), is controlled for by all other predictors, including the given variable measured at t-1 (y(t-1)). 
+The general idea is that we estimate for each variable measured at time t, the strengh of the effect of all the other variables on it, where the predictors are measured at time t-1.The effects of a predictor on a given variable, say y(t), is controlled for by all other predictors, including the given variable measured at t-1 (y(t-1)). The represented effects in the network are therefore partial effects. This network is similar to networks based on a correlation matrix, in which the lines between variables also represent partial correlations.
 
 \begin{equation}
  y_j(t) = b_{j0} + \sum_{k=1}^{M} b_{jk} y_k(t-1) + e_j.
 \end{equation}
 
 where j = 1,..,M and k = 1,..,M.
-When we have M variables for which we want to build a network, there are also M predictors for each variable. After running the analyses the regression coefficients are gathered in a square matrix. The diagonal of this matrix represents the effects of y(t-1) on y(t), controlled for the other predictors.
+When there are M variables for which we want to build a network, there are also M predictors for each variable. After running the analyses the regression coefficients are gathered in a square matrix. The diagonal of this matrix represents the effects of y(t-1) on y(t), controlled for the other predictors.
 Since ESM data are hierarchical, the measurements are clustered within days and within subjects. To deal with possible cluster effects of subjects, the regression model shown in formula (1) is extended to a multilevel model in which the intercepts and slopes are allowed to vary across individuals (see formula (2))
 
 \begin{equation}
@@ -92,8 +92,9 @@ b_{ijk} = b_{jk} + u_{ijk}.
 
 ## Example
 
-The data for this example (DataNews) are obtained in a ESM study about the effect of daily news perception on mood fluctuations. During 10 days, and at 7 random moments per day, participants indicated whether they had perceived news, and if they had, to rate the valence of the news using 5 variables. After that they had to rate their mood using items from the PANAS. 
-After selecting a relevant subset of the data for this example, we construct an object `vars`, which cobtains the variable names that will be used to build the network. To label the vars in the network plot with convenient symbols, we can define labels, which we add in the object `labs`. Furthermore, groups are defined for the variables in the object `newsGroup`. Variables belonging to each other are placed in the same group. Here we have variables that refer to the news, which indicate the subjective valence of the news (the Valence group), and we have mood items, put in the group called "Affect".
+To illustrate how a network can be build, we start with an example. The data for this example (DataNews) were obtained in an ESM study about the effect of daily news perceptions on mood fluctuations (De Hoog & Verboon, 2019). During 10 days, and at 7 random moments per day, participants indicated whether they had perceived news, and if they had, to rate the valence of the news, using 5 variables. After having scored the news they had to rate their mood using items from the PANAS. 
+First, some helpful objects for the analysis were constructed. After selecting a relevant subset of the data for this example, we constructed an object `vars`, which cobtained the variable names that were used to build the network. To label the variables in the network plot with convenient symbols, we can define labels, which we added in the object `labs`. Furthermore, groups of variables are defined and set in the object `varGroups`. Variables belonging to each other are placed in the same group. Here we have variables that refer to the news, which indicate the subjective valence of the news (the Valence group), and we have mood items, put in the group called "Affect".
+
 ```{r example1, eval = F, echo = TRUE, include = TRUE, warning = FALSE}
 
 data("DataNews")
@@ -102,7 +103,7 @@ dat <- subset(DataNews, News_YesNO == 1)
 vars <- c("Cheerful","Relaxed","Down","Irritated","Insecure","Anxious",
           "Dramatic","Fearful","Hopeful","Inspiring")
 labs <- c("CH","REL","DOW", "IRR","INS","ANX","DRA","FF","HO","SPI")
-newsGroup <- list(Affect = c(1:6), Valence = c(7:10))
+varGroups <- list(Affect = c(1:6), Valence = c(7:10))
  # select the relevant variables only
 dat1 <- dat[,c(vars,c("Participant","daynr","beepnr","Gender2","Age"))]    
 
@@ -116,7 +117,7 @@ res <- esmNetwork(dat=dat1,
                   randomVars =  NULL,   ## c("Fearful","Hopeful"),
                   layout = "spring",
                   lagn = 1,
-                  groups = newsGroup,
+                  groups = varGroups,
                   plimit = 0.05,
                   solid = .20,
                   labs = labs)
@@ -125,10 +126,12 @@ plot(res$output$network)
 
 ```
 
-The function `esmNetwork()' is used to run the analyses and build a network based on these analyses.
+The function `esmNetwork()' is used to run the analyses and build a network based on these analyses. The function assumes ESM data or a similar structure. That means that we assume there are persons (subjects), who have answered a short questionnaires several times a day, during several days. The intermediate level (days) is not necessary, and could be absent. The lagged analyses are defined on the first level, the measurements within days (beeps). 
+The relevant variables can be grand-mean centered or centered within groups.
+
 
 ## Indices of centrality
-To better unbderstand the role of the variables in the network several statistics for a network have been developped, which are called indices of centrality. 
+To better understand the role of the variables in the network several statistics for a network have been developped, which are called indices of centrality. 
 
 ## Note
 We used `r cite_r("Refs_network")` for all our analyses.
