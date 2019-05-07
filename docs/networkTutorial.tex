@@ -207,20 +207,25 @@ variables. The general idea is that we estimate for each variable
 measured at time t, the strengh of the effect of all the other variables
 on it, where the predictors are measured at time t-1.The effects of a
 predictor on a given variable, say y(t), is controlled for by all other
-predictors, including the given variable measured at t-1 (y(t-1)).
+predictors, including the given variable measured at t-1 (y(t-1)). The
+represented effects in the network are therefore partial effects. This
+network is similar to networks based on a correlation matrix, in which
+the lines between variables also represent partial correlations.
 
 \begin{equation}
  y_j(t) = b_{j0} + \sum_{k=1}^{M} b_{jk} y_k(t-1) + e_j.
 \end{equation}
 
-where j = 1,..,M and k = 1,..,M. When we have M variables for which we
+where j = 1,..,M and k = 1,..,M. When there are M variables for which we
 want to build a network, there are also M predictors for each variable.
 After running the analyses the regression coefficients are gathered in a
 square matrix. The diagonal of this matrix represents the effects of
 y(t-1) on y(t), controlled for the other predictors. Since ESM data are
 hierarchical, the measurements are clustered within days and within
 subjects. To deal with possible cluster effects of subjects, the
-regression model shown in formula (1) is extended to a multilevel model.
+regression model shown in formula (1) is extended to a multilevel model
+in which the intercepts and slopes are allowed to vary across
+individuals (see formula (2))
 
 \begin{equation}
  \begin{split}
@@ -232,21 +237,23 @@ b_{ijk} = b_{jk} + u_{ijk}.
 
 \subsection{Example}\label{example}
 
-The data for this example (DataNews) are obtained in a ESM study about
-the effect of daily news perception on mood fluctuations. During 10
-days, and at 7 random moments per day, participants indicated whether
-they had perceived news, and if they had, to rate the valence of the
-news using 5 variables. After that they had to rate their mood using
-items from the PANAS. After selecting a relevant subset of the data for
-this example, we construct an object \texttt{vars}, which cobtains the
-variable names that will be used to build the network. To label the vars
-in the network plot with convenient symbols, we can define labels, which
-we add in the object \texttt{labs}. Furthermore, groups are defined for
-the variables in the object \texttt{newsGroup}. Variables belonging to
-each other are placed in the same group. Here we have variables that
-refer to the news, which indicate the subjective valence of the news
-(the Valence group), and we have mood items, put in the group called
-\enquote{Affect}.
+To illustrate how a network can be build, we start with an example. The
+data for this example (DataNews) were obtained in an ESM study about the
+effect of daily news perceptions on mood fluctuations (De Hoog \&
+Verboon, 2019). During 10 days, and at 7 random moments per day,
+participants indicated whether they had perceived news, and if they had,
+to rate the valence of the news, using 5 variables. After having scored
+the news they had to rate their mood using items from the PANAS. First,
+some helpful objects for the analysis were constructed. After selecting
+a relevant subset of the data for this example, we constructed an object
+\texttt{vars}, which cobtained the variable names that were used to
+build the network. To label the variables in the network plot with
+convenient symbols, we can define labels, which we added in the object
+\texttt{labs}. Furthermore, groups of variables are defined and set in
+the object \texttt{varGroups}. Variables belonging to each other are
+placed in the same group. Here we have variables that refer to the news,
+which indicate the subjective valence of the news (the Valence group),
+and we have mood items, put in the group called \enquote{Affect}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -256,7 +263,7 @@ refer to the news, which indicate the subjective valence of the news
 \NormalTok{vars <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"Cheerful"}\NormalTok{,}\StringTok{"Relaxed"}\NormalTok{,}\StringTok{"Down"}\NormalTok{,}\StringTok{"Irritated"}\NormalTok{,}\StringTok{"Insecure"}\NormalTok{,}\StringTok{"Anxious"}\NormalTok{,}
           \StringTok{"Dramatic"}\NormalTok{,}\StringTok{"Fearful"}\NormalTok{,}\StringTok{"Hopeful"}\NormalTok{,}\StringTok{"Inspiring"}\NormalTok{)}
 \NormalTok{labs <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"CH"}\NormalTok{,}\StringTok{"REL"}\NormalTok{,}\StringTok{"DOW"}\NormalTok{, }\StringTok{"IRR"}\NormalTok{,}\StringTok{"INS"}\NormalTok{,}\StringTok{"ANX"}\NormalTok{,}\StringTok{"DRA"}\NormalTok{,}\StringTok{"FF"}\NormalTok{,}\StringTok{"HO"}\NormalTok{,}\StringTok{"SPI"}\NormalTok{)}
-\NormalTok{newsGroup <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{Affect =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{), }\DataTypeTok{Valence =} \KeywordTok{c}\NormalTok{(}\DecValTok{7}\OperatorTok{:}\DecValTok{10}\NormalTok{))}
+\NormalTok{varGroups <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{Affect =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{), }\DataTypeTok{Valence =} \KeywordTok{c}\NormalTok{(}\DecValTok{7}\OperatorTok{:}\DecValTok{10}\NormalTok{))}
  \CommentTok{# select the relevant variables only}
 \NormalTok{dat1 <-}\StringTok{ }\NormalTok{dat[,}\KeywordTok{c}\NormalTok{(vars,}\KeywordTok{c}\NormalTok{(}\StringTok{"Participant"}\NormalTok{,}\StringTok{"daynr"}\NormalTok{,}\StringTok{"beepnr"}\NormalTok{,}\StringTok{"Gender2"}\NormalTok{,}\StringTok{"Age"}\NormalTok{))]    }
 
@@ -270,7 +277,7 @@ refer to the news, which indicate the subjective valence of the news
                   \DataTypeTok{randomVars =}  \OtherTok{NULL}\NormalTok{,   ## c("Fearful","Hopeful"),}
                   \DataTypeTok{layout =} \StringTok{"spring"}\NormalTok{,}
                   \DataTypeTok{lagn =} \DecValTok{1}\NormalTok{,}
-                  \DataTypeTok{groups =}\NormalTok{ newsGroup,}
+                  \DataTypeTok{groups =}\NormalTok{ varGroups,}
                   \DataTypeTok{plimit =} \FloatTok{0.05}\NormalTok{,}
                   \DataTypeTok{solid =}\NormalTok{ .}\DecValTok{20}\NormalTok{,}
                   \DataTypeTok{labs =}\NormalTok{ labs)}
@@ -284,7 +291,7 @@ network based on these analyses.
 
 \subsection{Indices of centrality}\label{indices-of-centrality}
 
-To better unbderstand the role of the variables in the network several
+To better understand the role of the variables in the network several
 statistics for a network have been developped, which are called indices
 of centrality.
 
