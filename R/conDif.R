@@ -18,7 +18,7 @@
 #' out <- testCF(dat=dat, vars=vars, group="wellBeing", subjnr="subjnr",
 #' level1="beepno", level2 = "dayno", 
 #' randomVars = F, perms = 100) 
-testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, perms = 500) {
+conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, perms = 500) {
   
   res <- list(intermediate = list(),
               output = list());
@@ -117,7 +117,7 @@ testCF <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
 
   
-  class(res) <- "testCF"
+  class(res) <- "conDif"
   return(res)
   
 } # end function

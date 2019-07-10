@@ -1,5 +1,5 @@
 
-#' Function to compute lagged n variables in ESM data and add it to data
+#' Function to center variables in ESM data and add it to data
 #'
 #' @param dat data frame 
 #' @param subjnr variable, indicating subjects
