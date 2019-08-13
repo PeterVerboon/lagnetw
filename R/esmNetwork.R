@@ -113,7 +113,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
  
   ## Construct lagged variables
    
-  dat2 <- LagESM(dat1, 
+  dat2 <- lagESM(dat1, 
                  subjnr=subjnr,
                  level2=level2,
                  level1=level1, 

@@ -13,9 +13,9 @@
 #' @export
 #'
 #' @examples
-#' load("gratitudeESM.rda")
+#' load("gratitude.rda")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
-#' out <- conDif(dat=dat, vars=vars, group="wellBeing", subjnr="subjnr",
+#' out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
 #' level1="beepno", level2 = "dayno", randomVars = F, perms = 100) 
 conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, perms = 500) {
   
@@ -29,9 +29,9 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
    }
   
   dat1 <- lagnetw::centerESM(data = dat, subjnr = subjnr, addmeans = F, varnames = vars, center = "grand_mean")
-  dat1 <- lagnetw::LagESM(data = dat1, subjnr = subjnr, level1 = level1, level2 = level2, lagn = 1, varnames = vars )
+  dat1 <- lagnetw::lagESM(data = dat1, subjnr = subjnr, level1 = level1, level2 = level2, lagn = 1, varnames = vars )
   
-  k <- length(vars)
+  k <- length(vars)  
   
   ### set up matrices to store coefficients in
   b1 <- matrix(NA, nrow=k, ncol=k)

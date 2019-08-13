@@ -2,7 +2,7 @@
 % Please edit documentation in R/centerESM.R
 \name{centerESM}
 \alias{centerESM}
-\title{Function to compute lagged n variables in ESM data and add it to data}
+\title{Function to center variables in ESM data and add it to data}
 \usage{
 centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL,
   center = NULL)
@@ -30,7 +30,7 @@ If center is NULL no variables are centered and a warning is issued.}
 data frame with centered variables, and if requested, person means with suffix "_means".
 }
 \description{
-Function to compute lagged n variables in ESM data and add it to data
+Function to center variables in ESM data and add it to data
 }
 \examples{
 data("DataNews")

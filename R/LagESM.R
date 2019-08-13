@@ -16,7 +16,7 @@
 #' res <- lagESM(data = DataNews, subjnr="subjnr", level2= "daynr",
 #'        level1 = "beepnr", lagn = 1, varnames = vars)
 
-LagESM <- function(data, subjnr="subjnr", level2 = NULL, level1 = "beepnr", lagn=1, varnames = NULL) {
+lagESM <- function(data, subjnr="subjnr", level2 = NULL, level1 = "beepnr", lagn=1, varnames = NULL) {
   
 
 if (lagn > 3)  return("Number of lags in function LagESM should not exceed 3","\n") 
