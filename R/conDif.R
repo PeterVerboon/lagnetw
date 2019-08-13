@@ -15,9 +15,8 @@
 #' @examples
 #' load("gratitudeESM.rda")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
-#' out <- testCF(dat=dat, vars=vars, group="wellBeing", subjnr="subjnr",
-#' level1="beepno", level2 = "dayno", 
-#' randomVars = F, perms = 100) 
+#' out <- conDif(dat=dat, vars=vars, group="wellBeing", subjnr="subjnr",
+#' level1="beepno", level2 = "dayno", randomVars = F, perms = 100) 
 conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, perms = 500) {
   
   res <- list(intermediate = list(),

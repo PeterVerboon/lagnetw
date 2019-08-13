@@ -12,8 +12,8 @@
 #' @export
 #'
 #' @examples
-#' data("newsData")
-#' res <- lagESM(data = newsData, subjnr="subjnr", level2= "daynr",
+#' data("DataNews")
+#' res <- lagESM(data = DataNews, subjnr="subjnr", level2= "daynr",
 #'        level1 = "beepnr", lagn = 1, varnames = vars)
 
 LagESM <- function(data, subjnr="subjnr", level2 = NULL, level1 = "beepnr", lagn=1, varnames = NULL) {

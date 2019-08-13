@@ -2,7 +2,7 @@
 #' Function to plot the results of the testCF function for network connectivity 
 #' differences between two groups
 #'
-#' @param x result of testCF 
+#' @param x result of conDif 
 #' @param type number that indicates what output to plot, 
 #'            1 = mean differences total
 #'            2 = mean differences auto-regression, 
