@@ -10,7 +10,7 @@
 #'            4 = mean differences of SD's 
 #' @export
 #'
-plot.testCF <- function(x, type=1) {
+plot.conDif <- function(x, type=1) {
   
   a <- x$output$perms[,type]
   est <- x$output$pvals[type,1]
