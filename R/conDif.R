@@ -116,6 +116,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
 
   
+  
   class(res) <- "conDif"
   return(res)
   
