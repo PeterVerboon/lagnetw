@@ -18,24 +18,23 @@
 
 lagESM <- function(data, subjnr="subjnr", level2 = NULL, level1 = "beepnr", lagn=1, varnames = NULL) {
   
-
-if (lagn > 3)  return("Number of lags in function LagESM should not exceed 3","\n") 
+  
+if (lagn > 3)  return("Number of lags in function lagESM should not exceed 3","\n") 
 if (is.null(level1))  
-  return(cat("Level 1 is not correctly specified in function LagESM","\n")) 
+  return(cat("Level 1 is not correctly specified in function lagESM","\n")) 
 if (is.null(varnames))  
-  return(cat("Argument varnames is not specified in function LagESM","\n")) 
+  return(cat("Argument varnames is not specified in function lagESM","\n")) 
   
   if(!subjnr %in% names(data)) 
-    return(cat("Name of subjnr is not correctly specified in function LagESM","\n")) 
+    return(cat("Name of subjnr is not correctly specified in function lagESM","\n")) 
   if(!level1 %in% names(data)) 
-    return(cat("Name of level1 is not correctly specified in function LagESM","\n")) 
+    return(cat("Name of level1 is not correctly specified in function lagESM","\n")) 
   if(!is.null(level2)) {
      if(!level2 %in% names(data)) 
-       return(cat("Name of level2 is not correctly specified in function LagESM","\n")) 
-  } 
-  if(level1 == level2)
-    return(cat("Level1 must be different from level2 in function LagESM","\n")) 
-  
+       return(cat("Name of level2 is not correctly specified in function lagESM","\n")) 
+     if(level1 == level2)
+       return(cat("Level1 must be different from level2 in function lagESM","\n")) 
+  }
 if (is.null(level2)) {
   level2 <- "one"
   data$one <- 1
