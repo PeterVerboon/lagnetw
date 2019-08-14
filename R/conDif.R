@@ -113,7 +113,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   res$output$resObserved1 <- res1
   res$output$resObserved2 <- res2
   res$output$pvals <- outp
-  res$output$perms <- permres <- data.frame(permres)
+  res$output$permutations <- permres <- data.frame(permres)
   
   colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
 
