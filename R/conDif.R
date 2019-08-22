@@ -47,7 +47,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   if (randomVars == TRUE) {
     pred1 <- paste0("(", varsp," + (", varsp, "|",subjnr,"))")
   } else {
-    pred1 <- paste0("(", varsp," + (", 1, "|","subjnr","))")
+    pred1 <- paste0("(", varsp," + (", 1, "|",subjnr,"))")
   }
  
   ## analyses of observed data
@@ -110,11 +110,14 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   outp <- round(cbind(b.diff.obs, "p-perm.def1"=p.perm.def1, "p-perm.def2"=p.perm.def2), 4)
   
+  res$output$resObserved1 <- res1
+  res$output$resObserved2 <- res2
   res$output$pvals <- outp
-  res$output$perms <- permres <- data.frame(permres)
+  res$output$permutations <- permres <- data.frame(permres)
   
   colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
 
+  
   
   class(res) <- "conDif"
   return(res)
