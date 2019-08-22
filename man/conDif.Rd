@@ -2,7 +2,7 @@
 % Please edit documentation in R/conDif.R
 \name{conDif}
 \alias{conDif}
-\title{Function to test the difference of the network connectivity between two groups}
+\title{Test the difference of the network connectivity between two groups}
 \usage{
 conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
   perms = 500)
@@ -24,10 +24,10 @@ conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
 }
 \value{
 Estimate of difference between groups wrt network connectivity with p value based on permutations.
-           and permutation distribution
+Also plot of permutation distribution is given.
 }
 \description{
-Function to test the difference of the network connectivity between two groups
+Function to test the difference of the network connectivity between two groups.
 }
 \examples{
 load("gratitude.rda")

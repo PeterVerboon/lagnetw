@@ -1,4 +1,4 @@
-#' Function to test the difference of the network connectivity between two groups
+#' Test the difference of the network connectivity between two groups
 #'
 #' @param dat data frame 
 #' @param subjnr variable, indicating subjects
