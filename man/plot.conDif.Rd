@@ -18,5 +18,5 @@ differences between two groups}
 }
 \description{
 Function to plot the results of the testCF function for network connectivity 
-differences between two groups
+differences between two groups. Th plot depends on the type which is specified.
 }
