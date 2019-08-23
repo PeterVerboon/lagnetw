@@ -1,5 +1,7 @@
 
-#' Function to compute network of ESM variables using lags in multilevel analysis
+#' Compute network of ESM variables using lags 
+#' 
+#' Based om lagged variables from an ESM study a network is constructed.
 #'
 #' @param dat data frame 
 #' @param subjnr variable name, indicating the subjects
@@ -26,10 +28,10 @@
 #' @export
 #'
 #' @examples
-#' data("DataNews")
+#' data("news")
 #' vars <- c("Fearful","Hopeful","Anxious","Down","Irritated","Relaxed","Insecure")
 #' labs <- c("FF","HO","ANX","DOW", "IRR","REL","INS")
-#' res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
+#' res <- esmNetwork(dat = news, subjnr="subjnr",level1 = "beepnr",
 #'                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
 #'        
 esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL, 
@@ -129,7 +131,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   model1 <- list()
   
   for (j in 1:nvars) {
-    ff=as.formula(paste(vars[j],"~", pred1, sep="")); 
+    ff = stats::as.formula(paste(vars[j],"~", pred1, sep="")); 
     model1[[j]]<-lme4::lmer(ff, data=dat2, REML=FALSE)
   }
   
@@ -151,7 +153,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   E <- cbind(from=rep(1:nvars,each=nvars),
              to=rep(1:nvars,nvars),
              weigth=unlist(coef1[,(2+npred-nvars):(npred+1)]))
-  pvals <- 2*(1-pnorm(abs(unlist(coef1[,(2+npred-nvars):(npred+1)]/se.coef1[,(2+npred-nvars):(npred+1)]) )))
+  pvals <- 2*(1- stats::pnorm(abs(unlist(coef1[,(2+npred-nvars):(npred+1)]/se.coef1[,(2+npred-nvars):(npred+1)]) )))
   edge.color <- addTrans(ifelse(E[,3] > 0, "green3", "red3"), ifelse(pvals < plimit, 255, 0))
   
   result$intermediate$pvals <- pvals

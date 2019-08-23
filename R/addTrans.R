@@ -24,7 +24,7 @@ addTrans <- function(color, trans)
     hex <- unlist(strsplit("0123456789ABCDEF",split=""))
     return(paste(hex[(x-x%%16)/16+1],hex[x%%16+1],sep=""))
   }
-  rgb <- rbind(col2rgb(color),trans)
+  rgb <- rbind(grDevices::col2rgb(color),trans)
   res <- paste("#",apply(apply(rgb,2,num2hex),2,paste,collapse=""),sep="")
   return(res)
 }

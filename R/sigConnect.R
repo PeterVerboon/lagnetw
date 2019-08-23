@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @example 
-#' load("gratitude.rda")
+#' data("gratitude")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 #' 
 #' a <- sigConnect(dat = gratitude, vars = vars , group="wellBeing", subjnr ="subjnr", level = "beepno", randomVars = F, perms = 10)
@@ -48,7 +48,7 @@ for (i in 2:k) {
 if (randomVars == TRUE) {
   randomPred1 <- paste0( varsp, "|",subjnr)
 } else {
-  randomPred1 <- as.formula(paste0("~", 1, "|", subjnr))
+  randomPred1 <- stats::as.formula(paste0("~", 1, "|", subjnr))
 }
 
 
@@ -74,7 +74,7 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
          
       cat("Outcome:", outname, "\n")
 
-      ff <- as.formula(paste0(outname, "~", varsp, sep=""))
+      ff <- stats::as.formula(paste0(outname, "~", varsp, sep=""))
 
       is.conti <- TRUE  ## not yet dichotomous variables
       
@@ -83,8 +83,8 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
          res1 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 1), na.action=na.omit, control=list(opt="optim"))
          res2 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 2), na.action=na.omit, control=list(opt="optim"))
       } else {
-         res1 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 1), family=binomial)
-         res2 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 2), family=binomial)
+         res1 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 1), family= stats::binomial)
+         res2 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 2), family= stats::binomial)
       }
 
          difs[i,] <- lme4::fixef(res1) - lme4::fixef(res2)

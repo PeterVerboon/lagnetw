@@ -56,6 +56,8 @@ Function to compute network of ESM variables using lags in multilevel analysis
 }
 \examples{
 data("DataNews")
+vars <- c("Fearful","Hopeful","Anxious","Down","Irritated","Relaxed","Insecure")
+labs <- c("FF","HO","ANX","DOW", "IRR","REL","INS")
 res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
        

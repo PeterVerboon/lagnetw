@@ -1,10 +1,10 @@
 
-#' Function to center variables in ESM data and add it to data
+#' Center variables in ESM data 
+#' 
+#' Group centering or grand-mean centering the specified variables and optionally add them to the data 
 #'
-#' @param dat data frame 
+#' @param data data frame 
 #' @param subjnr variable, indicating subjects
-#' @param level2 variable, indicating level 2 variable, e.g. days. Can be left empty. 
-#' @param level1 variable, indicating level 1 variable, e.g. beeps. Must be specified.
 #' @param varnames vector with the names of the variables which are centered.
 #' @param center vector of same length as varnames that indicates for each variable which centering must be,
 #'               applied, either "person" or "grand_mean" or a number. If "person" or "grand_mean" is specified once (default), 
@@ -17,8 +17,8 @@
 #' @export
 #'
 #' @examples
-#' data("DataNews")
-#' res <- centerESM(data = DataNews, subjnr="subjnr",
+#' data("news")
+#' res <- centerESM(data = news, subjnr="subjnr",
 #'        addmeans = TRUE, 
 #'        varnames = c("Lonely", "Relaxed", "Anxious"), 
 #'        center = c("person", "person", "person"))

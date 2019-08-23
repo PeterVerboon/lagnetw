@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.conDif.R
 \name{plot.conDif}
 \alias{plot.conDif}
-\title{Plot the results of the testCF function for network connectivity 
+\title{Function to plot the results of the testCF function for network connectivity 
 differences between two groups}
 \usage{
 \method{plot}{conDif}(x, type = 1)
@@ -18,5 +18,5 @@ differences between two groups}
 }
 \description{
 Function to plot the results of the testCF function for network connectivity 
-differences between two groups. Th plot depends on the type which is specified.
+differences between two groups
 }

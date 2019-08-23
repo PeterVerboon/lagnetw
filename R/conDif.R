@@ -1,10 +1,11 @@
 #' Test the difference of the network connectivity between two groups
 #'
-#' @param dat data frame 
-#' @param subjnr variable, indicating subjects
-#' @param level2 variable, indicating level 2 variable, e.g. days. Can be left empty. 
+#' @param dat data frame
+#' @param vars vector with the names of the variables which are centered. 
+#' @param group dichotomous variable that indicates the two groups to be compared
+#' @param subjnr identification number of the subjects
 #' @param level1 variable, indicating level 1 variable, e.g. beeps. Must be specified.
-#' @param vars vector with the names of the variables which are centered.
+#' @param level2 variable, indicating level 2 variable, e.g. days. Can be left empty. 
 #' @param randomVars logical, indicating whether the variables should be included as random effects.
 #' @param perms number of permutations.             
 #' @import ggplot2
@@ -13,7 +14,7 @@
 #' @export
 #'
 #' @examples
-#' load("gratitude.rda")
+#' data("gratitude")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 #' out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
 #' level1="beepno", level2 = "dayno", randomVars = F, perms = 100) 
@@ -53,7 +54,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   ## analyses of observed data
   for (i in 1:k) {
     
-    ff <- as.formula(paste0(vars[i], "~", pred1, sep=""))
+    ff <- stats::as.formula(paste0(vars[i], "~", pred1, sep=""))
     
     ### fit models
     res1 <- lme4::lmer(ff, data=subset(dat1, group == 1), REML=FALSE)
@@ -78,7 +79,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   ### repeatedly apply permfunc() function
   
-  pb1 <- txtProgressBar(min = 0, max = perms, style = 3)
+  pb1 <- utils::txtProgressBar(min = 0, max = perms, style = 3)
   permres <- lapply(1:perms, permfunc, dat=dat1, pb = pb1, outnames=vars, pred=pred1, nobs.per.person=nobs.per.person, group.per.person=group.per.person)
   close(pb1)
   
@@ -98,7 +99,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   diag(b1) <- NA
   diag(b2) <- NA
   b.diff.obs[3] <- mean(abs(b1), na.rm=TRUE) - mean(abs(b2), na.rm=TRUE)
-  b.diff.obs[4] <- sd(b1, na.rm =TRUE) - sd(b2, na.rm =TRUE)
+  b.diff.obs[4] <- stats::sd(b1, na.rm =TRUE) - stats::sd(b2, na.rm =TRUE)
   
   p.perm.def1 <- p.perm.def2 <- rep(NA, length(b.diff.obs))
   for (j in 1:length(b.diff.obs)) {

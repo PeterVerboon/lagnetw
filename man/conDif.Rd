@@ -24,10 +24,10 @@ conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
 }
 \value{
 Estimate of difference between groups wrt network connectivity with p value based on permutations.
-Also plot of permutation distribution is given.
+           and permutation distribution
 }
 \description{
-Function to test the difference of the network connectivity between two groups.
+Test the difference of the network connectivity between two groups
 }
 \examples{
 load("gratitude.rda")

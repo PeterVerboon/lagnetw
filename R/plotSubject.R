@@ -5,7 +5,6 @@
 #' @param subjectID identification number that indicates the subject to be plotted
 #' @param layout layout of the plot (see documentation of qgraph)
 #' @param solid effect size above which lines are shown as solid (default = .10)
-#' @param plimit p-value under which lines are shown (default = .05)
 #'
 #' @return an individual qgraph plot (network) 
 #' @export
