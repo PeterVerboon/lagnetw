@@ -19,6 +19,7 @@
 #'               applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
 #'               all variables are person or grand-mean centered, respectively.
 #'               If centerType is NULL no variables are centered.
+#' @param layout layout specification of plot (see options in qgraph)
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
 #' @param plimit p-value under which lines are shown (default = .05)

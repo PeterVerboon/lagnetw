@@ -1,7 +1,7 @@
 
 #' Function to compute lagged n variables in ESM data and add it to data
 #'
-#' @param dat data frame 
+#' @param data data frame 
 #' @param subjnr variable, indicating subjects
 #' @param level2 variable, indicating level 2 variable, e.g. days. Can be left empty. 
 #' @param level1 variable, indicating level 1 variable, e.g. beeps. Must be specified.
@@ -12,8 +12,9 @@
 #' @export
 #'
 #' @examples
-#' data("DataNews")
-#' res <- lagESM(data = DataNews, subjnr="subjnr", level2= "daynr",
+#' data("news")
+#' vars <- c("Fearful","Hopeful","Anxious","Down","Inspiring","Irritated","Relaxed","Insecure")
+#' res <- lagESM(data = news, subjnr="subjnr", level2= "daynr",
 #'        level1 = "beepnr", lagn = 1, varnames = vars)
 
 lagESM <- function(data, subjnr="subjnr", level2 = NULL, level1 = "beepnr", lagn=1, varnames = NULL) {

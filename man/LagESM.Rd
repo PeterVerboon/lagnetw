@@ -8,6 +8,8 @@ lagESM(data, subjnr = "subjnr", level2 = NULL, level1 = "beepnr",
   lagn = 1, varnames = NULL)
 }
 \arguments{
+\item{data}{data frame}
+
 \item{subjnr}{variable, indicating subjects}
 
 \item{level2}{variable, indicating level 2 variable, e.g. days. Can be left empty.}
@@ -17,8 +19,6 @@ lagESM(data, subjnr = "subjnr", level2 = NULL, level1 = "beepnr",
 \item{lagn}{number of lags}
 
 \item{varnames}{vector with the names of the variables for which lagged versions are computed}
-
-\item{dat}{data frame}
 }
 \value{
 data frame with lagged variables added, with suffix L1, L2, L3, respectively
@@ -27,7 +27,8 @@ data frame with lagged variables added, with suffix L1, L2, L3, respectively
 Function to compute lagged n variables in ESM data and add it to data
 }
 \examples{
-data("DataNews")
-res <- lagESM(data = DataNews, subjnr="subjnr", level2= "daynr",
+data("news")
+vars <- c("Fearful","Hopeful","Anxious","Down","Inspiring","Irritated","Relaxed","Insecure")
+res <- lagESM(data = news, subjnr="subjnr", level2= "daynr",
        level1 = "beepnr", lagn = 1, varnames = vars)
 }

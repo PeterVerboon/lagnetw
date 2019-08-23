@@ -2,7 +2,7 @@
 % Please edit documentation in R/esmNetwork.R
 \name{esmNetwork}
 \alias{esmNetwork}
-\title{Function to compute network of ESM variables using lags in multilevel analysis}
+\title{Compute network of ESM variables using lags}
 \usage{
 esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
   randomAll = FALSE, randomVars = NULL, randomIcept = TRUE,
@@ -40,6 +40,8 @@ applied, either "person" or "grand_mean" or a number. If only "person" or "grand
 all variables are person or grand-mean centered, respectively.
 If centerType is NULL no variables are centered.}
 
+\item{layout}{layout specification of plot (see options in qgraph)}
+
 \item{labs}{labels used in the network plot}
 
 \item{solid}{effect size above which lines are shown as solid (default = .10)}
@@ -52,13 +54,13 @@ If centerType is NULL no variables are centered.}
 a qgraph object (network) that can be plotted
 }
 \description{
-Function to compute network of ESM variables using lags in multilevel analysis
+Based om lagged variables from an ESM study a network is constructed.
 }
 \examples{
-data("DataNews")
+data("news")
 vars <- c("Fearful","Hopeful","Anxious","Down","Irritated","Relaxed","Insecure")
 labs <- c("FF","HO","ANX","DOW", "IRR","REL","INS")
-res <- esmNetwork(dat = DataNews, subjnr="subjnr",level1 = "beepnr",
+res <- esmNetwork(dat = news, subjnr="subjnr",level1 = "beepnr",
                   level2= "daynr", vars = vars, labs = labs, lagn = 1)
        
 }

@@ -10,7 +10,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' plotSubject(res = res, subjectID = 31623)
+#' }
 #' 
 plotSubject <- function(res, subjectID, layout = "circular", solid = .10 ) {
  
@@ -73,7 +75,7 @@ G3 <- qgraph::qgraph(E3,
                      title = paste0("Subject ", subjectID),
                      title.cex = .7)
 
-plot(G3)
+graphics::plot(G3)
 
 }
 

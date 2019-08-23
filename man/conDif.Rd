@@ -12,7 +12,9 @@ conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
 
 \item{vars}{vector with the names of the variables which are centered.}
 
-\item{subjnr}{variable, indicating subjects}
+\item{group}{dichotomous variable that indicates the two groups to be compared}
+
+\item{subjnr}{identification number of the subjects}
 
 \item{level1}{variable, indicating level 1 variable, e.g. beeps. Must be specified.}
 
@@ -30,8 +32,8 @@ Estimate of difference between groups wrt network connectivity with p value base
 Test the difference of the network connectivity between two groups
 }
 \examples{
-load("gratitude.rda")
+data("gratitude")
 vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
-level1="beepno", level2 = "dayno", randomVars = F, perms = 100) 
+level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 100) 
 }

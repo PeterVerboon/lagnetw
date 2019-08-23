@@ -2,12 +2,14 @@
 % Please edit documentation in R/centerESM.R
 \name{centerESM}
 \alias{centerESM}
-\title{Function to center variables in ESM data and add it to data}
+\title{Center variables in ESM data}
 \usage{
 centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL,
   center = NULL)
 }
 \arguments{
+\item{data}{data frame}
+
 \item{subjnr}{variable, indicating subjects}
 
 \item{addmeans}{logical indicating whether a vector of person means should be added to the data 
@@ -19,23 +21,17 @@ centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL,
 applied, either "person" or "grand_mean" or a number. If "person" or "grand_mean" is specified once (default), 
 all variables are person or grand-mean centered, respectively. 
 If center is NULL no variables are centered and a warning is issued.}
-
-\item{dat}{data frame}
-
-\item{level2}{variable, indicating level 2 variable, e.g. days. Can be left empty.}
-
-\item{level1}{variable, indicating level 1 variable, e.g. beeps. Must be specified.}
 }
 \value{
 data frame with centered variables, and if requested, person means with suffix "_means".
 }
 \description{
-Function to center variables in ESM data and add it to data
+Group centering or grand-mean centering the specified variables and optionally add them to the data
 }
 \examples{
-data("DataNews")
-res <- centerESM(data = DataNews, subjnr="subjnr",
+data("news")
+res <- centerESM(data = news, subjnr="subjnr",
        addmeans = TRUE, 
-       varnames = c("Lonely", "Relaxed", "Anxious"), 
+       varnames = c("Fearful", "Relaxed", "Anxious"), 
        center = c("person", "person", "person"))
 }

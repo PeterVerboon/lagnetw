@@ -16,11 +16,11 @@
 #'         2 matrices (k x k) with the p-values (2 definitions) obtained from permutation distribution for the differences.
 #' @export
 #'
-#' @example 
+#' @examples 
 #' data("gratitude")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
-#' 
-#' a <- sigConnect(dat = gratitude, vars = vars , group="wellBeing", subjnr ="subjnr", level = "beepno", randomVars = F, perms = 10)
+#' sigConnect(dat = gratitude, vars = vars , group="wellBeing", subjnr ="subjnr", 
+#' level = "beepno", randomVars = FALSE, perms = 10)
 
 sigConnect <- function(dat, vars, group, subjnr, level, randomVars = F,  perms = 500) {
   
@@ -80,8 +80,8 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
       
       ### fit model with actual data
       if (is.conti) {
-         res1 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 1), na.action=na.omit, control=list(opt="optim"))
-         res2 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 2), na.action=na.omit, control=list(opt="optim"))
+         res1 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 1), na.action= stats::na.omit, control=list(opt="optim"))
+         res2 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 2), na.action= stats::na.omit, control=list(opt="optim"))
       } else {
          res1 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 1), family= stats::binomial)
          res2 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 2), family= stats::binomial)

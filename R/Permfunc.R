@@ -98,9 +98,9 @@ permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group
   
   ### fit model for both groups to data with reshuffled outcome
   if (is.conti) 
-  {res.perm1 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 1), na.action=na.omit, 
+  {res.perm1 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 1), na.action = stats::na.omit, 
                         control=list(opt="optim")), silent=TRUE)
-  res.perm2 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 2), na.action=na.omit, 
+  res.perm2 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 2), na.action = stats::na.omit, 
                        control=list(opt="optim")), silent=TRUE)
   } else {
     res.perm1 <- try(lme4::glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 1), family = stats::binomial), silent=TRUE)
@@ -108,13 +108,19 @@ permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group
   }
   
   ### if model doesn't converge, return NA; otherwise return coefficients
+  if (is.conti) {
   if (inherits(res.perm1, "try-error") | inherits(res.perm2, "try-error")) {
     return(difFixEffects <- NA)
+     } else {
+       return(difFixEffects <- nlme::fixef(res.perm1) - nlme::fixef(res.perm2))
+       }
   } else {
-    return(difFixEffects <- fixef(res.perm1) - fixef(res.perm2))
+  if (inherits(res.perm1, "try-error") | inherits(res.perm2, "try-error")) {
+    return(difFixEffects <- NA)
+     } else {
+       return(difFixEffects <- lme4::fixef(res.perm1) - lme4::fixef(res.perm2))
+       }
   }
-  
-  
   
 }  # end permfunc2
 

@@ -25,10 +25,6 @@ permfunc2(iter, dat, pred, dv, group, subjnr, nobs.per.person,
 \item{group.per.person}{vector with group number for each person}
 
 \item{is.conti}{boolean to indicate if dependent variable is continuous or dichotomous (NOT ACTIVE)}
-
-\item{outnames}{vector with the names of the variables which are centered}
-
-\item{pred}{formula with names of predictor variables for lmer}
 }
 \value{
 matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,

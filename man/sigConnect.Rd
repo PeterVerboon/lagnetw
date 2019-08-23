@@ -30,3 +30,9 @@ matrix (k x k) with observed differences of the paths ( k = number of variables 
 Function that uses resampling method (permutations) to obtain distribion and p-values for
 the differences of the path strengths of a network between two groups.
 }
+\examples{
+data("gratitude")
+vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
+sigConnect(dat = gratitude, vars = vars , group="wellBeing", subjnr ="subjnr", 
+level = "beepno", randomVars = FALSE, perms = 10)
+}

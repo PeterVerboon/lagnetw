@@ -20,7 +20,7 @@
 #' data("news")
 #' res <- centerESM(data = news, subjnr="subjnr",
 #'        addmeans = TRUE, 
-#'        varnames = c("Lonely", "Relaxed", "Anxious"), 
+#'        varnames = c("Fearful", "Relaxed", "Anxious"), 
 #'        center = c("person", "person", "person"))
 
 centerESM <- function(data, subjnr = NULL, addmeans = TRUE, varnames = NULL, center = NULL) {

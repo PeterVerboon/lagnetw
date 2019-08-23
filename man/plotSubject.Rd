@@ -14,8 +14,6 @@ plotSubject(res, subjectID, layout = "circular", solid = 0.1)
 \item{layout}{layout of the plot (see documentation of qgraph)}
 
 \item{solid}{effect size above which lines are shown as solid (default = .10)}
-
-\item{plimit}{p-value under which lines are shown (default = .05)}
 }
 \value{
 an individual qgraph plot (network)
@@ -24,6 +22,8 @@ an individual qgraph plot (network)
 Network plot of an individual
 }
 \examples{
+\dontrun{
 plotSubject(res = res, subjectID = 31623)
+}
 
 }
