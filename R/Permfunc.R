@@ -1,4 +1,6 @@
-#' Function to test the difference of the network connectivity between two groups
+#' Test the difference of the network connectivity between two groups
+#' 
+#' The function uses permutations to obtain p-values of the connectivity differences.
 #'
 #' @param perms number of permutations
 #' @param dat data frame 
@@ -62,6 +64,71 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
 
 } 
 
+
+
+
+#' Test the difference of the network paths between two groups
+#' 
+#' The function uses permutations to obtain p-values of the path differences.
+#'
+#' @param iter number of permutations
+#' @param dat data frame 
+#' @param pred vector with names of predictor variables
+#' @param outnames vector with the names of the variables which are centered
+#' @param pred formula with names of predictor variables for lmer
+#' @param dv name dependent variable
+#' @param group dichotomous variable that indicates the two groups to be compared
+#' @param subjnr identification number of the subjects
+#' @param nobs.per.person vector with number of observations per person             
+#' @param group.per.person vector with group number for each person 
+#' @param is.conti boolean to indicate if dependent variable is continuous or dichotomous (NOT ACTIVE)            
+#'
+#' @return matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,
+#'         and differences between standard deviations, with their p-values (2 definitions).
+#' @export
+#'
+permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group.per.person, is.conti = TRUE) {
+
+  if (is.conti) {
+    library(nlme)
+  } else {
+    library(lme4)
+  }
+  
+  ### reshuffle outcome variable within subjects
+  ## dat$outcome <- unlist(sapply(split(dat[,dv], dat[,subjnr]), sample))
+  
+  ### reshuffle group variable
+  dat$group <- rep(sample(group.per.person), times=nobs.per.person)
+  
+  ff <- as.formula(paste0(dv," ~ ", pred, sep=""))
+  
+  ### fit model for both groups to data with reshuffled outcome
+  if (is.conti) 
+  {res.perm1 <- try(lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 1), na.action=na.omit, 
+                        control=list(opt="optim")), silent=TRUE)
+  res.perm2 <- try(lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 2), na.action=na.omit, 
+                       control=list(opt="optim")), silent=TRUE)
+  } else {
+    res.perm1 <- try(glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 1), family=binomial), silent=TRUE)
+    res.perm2 <- try(glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 2), family=binomial), silent=TRUE)
+  }
+  
+  ### if model doesn't converge, return NA; otherwise return coefficients
+  if (inherits(res.perm1, "try-error") | inherits(res.perm2, "try-error")) {
+    return(difFixEffects <- NA)
+  } else {
+    return(difFixEffects <- fixef(res.perm1) - fixef(res.perm2))
+  }
+  
+  
+  
+}  # end permfunc2
+
+
+
+# a <- permfunc2(iter=1,dat=dat1, pred = varsp, dv = outname,subjnr = subjnr,
+#               group = group,nobs.per.person = nobs.per.person, group.per.person=group.per.person)
 
 
 
