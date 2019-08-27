@@ -19,6 +19,7 @@
 #'               applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
 #'               all variables are person or grand-mean centered, respectively.
 #'               If centerType is NULL no variables are centered.
+#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #' @param layout layout specification of plot (see options in qgraph)
 #' @param labs labels used in the network plot
 #' @param solid effect size above which lines are shown as solid (default = .10)
@@ -39,6 +40,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                        randomAll = FALSE, randomVars = NULL, 
                        randomIcept = TRUE, fixedIcept = TRUE,
                        groups = NULL, lagn=1, centerType = "person",
+                       optim = "bobyqa",
                        layout = "spring", labs=NULL, 
                        solid = .10, plimit = .05, titlePlot="Figure"){
   
@@ -129,11 +131,19 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   
   ### run MLA for all variables in network
   
+  if (is.null(optim))  optim <- "bobyqa"
+  if (!optim %in% c("Nelder_Mead", "bobyqa")) {
+    warning("Optimizer not correctly specified. Default is used.")
+    optim <- "bobyqa"
+  }
+  
+  
   model1 <- list()
   
   for (j in 1:nvars) {
     ff = stats::as.formula(paste(vars[j],"~", pred1, sep="")); 
-    model1[[j]]<-lme4::lmer(ff, data=dat2, REML=FALSE)
+    model1[[j]]<-lme4::lmer(ff, data=dat2, REML=FALSE, 
+                            control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
   }
   
   
