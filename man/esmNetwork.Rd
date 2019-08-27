@@ -7,8 +7,8 @@
 esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
   randomAll = FALSE, randomVars = NULL, randomIcept = TRUE,
   fixedIcept = TRUE, groups = NULL, lagn = 1,
-  centerType = "person", layout = "spring", labs = NULL,
-  solid = 0.1, plimit = 0.05, titlePlot = "Figure")
+  centerType = "person", optim = "bobyqa", layout = "spring",
+  labs = NULL, solid = 0.1, plimit = 0.05, titlePlot = "Figure")
 }
 \arguments{
 \item{dat}{data frame}
@@ -39,6 +39,8 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
 all variables are person or grand-mean centered, respectively.
 If centerType is NULL no variables are centered.}
+
+\item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
 
 \item{layout}{layout specification of plot (see options in qgraph)}
 
