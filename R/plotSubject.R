@@ -11,9 +11,9 @@
 #' @export
 #'
 #' @examples
-#' plotSubject(res = res, subjectID = 31623)
+#' \dontrun{ plotSubject(res = res, subjectID = 31623) }
 #' 
-plotSubject <- function(res, subjectID, layout = "circular", solid = .10 ) {
+plotSubject <- function(res, subjectID, layout = "circular", solid = .10, plimit = 0.05 ) {
  
   dat <- res$input$dat
   subjnr <- res$input$subjnr
@@ -78,7 +78,7 @@ G3 <- qgraph::qgraph(E3,
                      title = paste0("Subject ", subjectID),
                      title.cex = .7)
 
-plot(G3)
+graphics::plot(G3)
 
 return(C)
 

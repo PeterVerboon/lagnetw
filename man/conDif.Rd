@@ -35,5 +35,5 @@ Test the difference of the network connectivity between two groups
 data("gratitude")
 vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
-level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 100) 
+level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 10) 
 }
