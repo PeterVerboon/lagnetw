@@ -5,14 +5,13 @@
 #' @param subjectID identification number that indicates the subject to be plotted
 #' @param layout layout of the plot (see documentation of qgraph)
 #' @param solid effect size above which lines are shown as solid (default = .10)
+#' @param plimit p-value under which lines are shown (default = .05)
 #'
 #' @return an individual qgraph plot (network) 
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' plotSubject(res = res, subjectID = 31623)
-#' }
 #' 
 plotSubject <- function(res, subjectID, layout = "circular", solid = .10 ) {
  
@@ -65,6 +64,10 @@ jj = rep(1:nvars,each=nvars)
 jk = rep(1:nvars,nvars)
 E3 = data.frame(from = jk, to = jj, weight = as.vector(ind))
 
+C <- qgraph::centrality(E3, alpha = 1, posfun = abs, all.shortest.paths = FALSE)
+C <- data.frame(cbind(C$Betweenness, C$Closeness, C$OutDegree, C$InDegree))
+names(C) <- c("Betweenness", "Closeness"," outDegree", " inDegree")
+row.names(C) <- vars
 
 G3 <- qgraph::qgraph(E3, 
                      layout = layout,
@@ -75,7 +78,9 @@ G3 <- qgraph::qgraph(E3,
                      title = paste0("Subject ", subjectID),
                      title.cex = .7)
 
-graphics::plot(G3)
+plot(G3)
+
+return(C)
 
 }
 
