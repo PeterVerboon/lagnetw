@@ -8,13 +8,15 @@
 #' @param outnames vector with the names of the variables which are centered.
 #' @param pred formula with names of predictor variables for lmer.
 #' @param nobs.per.person vector with number of observations per person             
-#' @param group.per.person vector with group number for each person             
+#' @param group.per.person vector with group number for each person
+#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
+             
 #'
 #' @return matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,
 #'         and differences between standard deviations, with their p-values (2 definitions).
 #' @export
 #'
-permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person) {
+permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person, optim = "bobyqa") {
 
   utils::setTxtProgressBar(pb, perms)
 
@@ -35,9 +37,13 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
 
       ff <- stats::as.formula(paste0(outnames[i], "~", pred, sep=""))
 
-      ### fit models
-      res1.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 1), REML=FALSE), silent = TRUE) 
-      res2.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 2), REML=FALSE), silent = TRUE)
+      ### fit models 
+      res1.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 1), REML=FALSE, 
+                                  control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), 
+                       silent = TRUE) 
+      res2.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 2), REML=FALSE, 
+                                  control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), 
+                       silent = TRUE)
       
       ### if one of the models doesn't converge, return NA; otherwise store coefficients
 

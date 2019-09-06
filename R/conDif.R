@@ -8,6 +8,7 @@
 #' @param level2 variable, indicating level 2 variable, e.g. days. Can be left empty. 
 #' @param randomVars logical, indicating whether the variables should be included as random effects.
 #' @param perms number of permutations.             
+#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #' @import ggplot2
 #' @return Estimate of difference between groups wrt network connectivity with p value based on permutations.
 #'            and permutation distribution
@@ -18,7 +19,8 @@
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 #' out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
 #' level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 10) 
-conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, perms = 500) {
+conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, 
+                   perms = 500, optim = "bobyqa") {
   
   res <- list(intermediate = list(),
               output = list());
@@ -51,14 +53,24 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
     pred1 <- paste0("(", varsp," + (", 1, "|",subjnr,"))")
   }
  
+  ### first choose optimizer
+  
+  if (is.null(optim))  optim <- "bobyqa"
+  if (!optim %in% c("Nelder_Mead", "bobyqa")) {
+    warning("Optimizer not correctly specified. Default is used.")
+    optim <- "bobyqa"
+  }
+  
   ## analyses of observed data
   for (i in 1:k) {
     
     ff <- stats::as.formula(paste0(vars[i], "~", pred1, sep=""))
     
     ### fit models
-    res1 <- lme4::lmer(ff, data=subset(dat1, group == 1), REML=FALSE)
-    res2 <- lme4::lmer(ff, data=subset(dat1, group == 2), REML=FALSE)
+    res1 <- lme4::lmer(ff, data=subset(dat1, group == 1), REML=FALSE, 
+                       control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
+    res2 <- lme4::lmer(ff, data=subset(dat1, group == 2), REML=FALSE, 
+                       control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
     
     ### store coefficients
     b1[i,] <- lme4::fixef(res1)[2:(k+1)]
@@ -80,7 +92,8 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   ### repeatedly apply permfunc() function
   
   pb1 <- utils::txtProgressBar(min = 0, max = perms, style = 3)
-  permres <- lapply(1:perms, permfunc, dat=dat1, pb = pb1, outnames=vars, pred=pred1, nobs.per.person=nobs.per.person, group.per.person=group.per.person)
+  permres <- lapply(1:perms, permfunc, dat=dat1, pb = pb1, outnames=vars, 
+                    pred=pred1, nobs.per.person=nobs.per.person, group.per.person=group.per.person)
   close(pb1)
   
   ### turn results into a matrix

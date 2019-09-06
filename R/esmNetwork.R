@@ -26,7 +26,7 @@
 #' @param plimit p-value under which lines are shown (default = .05)
 #' @param titlePlot title for the plot
 #'
-#' @return a qgraph object (network) that can be plotted
+#' @return a qgraph object (network) that can be plotted and the centrality measures
 #' @export
 #'
 #' @examples
@@ -130,6 +130,8 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   result$intermediate$workData2 <- dat2
   
   ### run MLA for all variables in network
+  
+  ### first choose optimizer
   
   if (is.null(optim))  optim <- "bobyqa"
   if (!optim %in% c("Nelder_Mead", "bobyqa")) {

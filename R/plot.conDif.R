@@ -1,17 +1,23 @@
 
-#' Function to plot the results of the testCF function for network connectivity 
+#' Function to plot the results of the conDif function for network connectivity 
 #' differences between two groups
-#'
-#' @param x result of conDif 
-#' @param type number that indicates what output to plot, 
+#' 
+#' There are four lot types. The type number indicates what figure is plotted, 
 #'            1 = mean differences total
 #'            2 = mean differences auto-regression, 
 #'            3 = mean differences, excluding auto regression,
 #'            4 = mean differences of SD's 
+#'
+#' @param x result of conDif 
+#' @return Four figures are build with ggplot and returned to the plot window
 #' @export
 #'
-plot.conDif <- function(x, type=1) {
+plot.conDif <- function(x,...) {
   
+  plotall <- list()
+
+  for (type in c(1:4)) { 
+    
   a <- x$output$permutations[,type]
   est <- x$output$pvals[type,1]
   lab <- colnames(x$output$permutations)[type]
@@ -24,15 +30,24 @@ cutoff2 <- stats::quantile(a,0.975)
 ylim1 <- colMeans((df[(min(abs(df$x - est)) == abs(df$x - est)),])[2])
 ylim2 <- colMeans((df[(min(abs(df$x - meanEst)) == abs(df$x - meanEst)),])[2])
 
-p <- ggplot(data = df, aes(x = df$x, y = df$y)) + geom_line()
-p <- p + geom_segment(aes(x=est, y=0, xend = est, yend=ylim1),color="blue", linetype="dashed", size=.5)
-p <- p + geom_segment(aes(x=meanEst, y=0, xend = meanEst, yend=ylim2),color="black", size=.5)
-p <- p + geom_ribbon(data=subset(df ,x<=cutoff1 ),aes(ymax= df$y,ymin=0),
-                     fill="gray10",colour=NA,alpha=0.5)
-p <- p + geom_ribbon(data=subset(df ,x>=cutoff2 ),aes(ymax= df$y,ymin=0),
-                     fill="gray10",colour=NA,alpha=0.5)
-p <- p + ggtitle(paste("Permutation distribution",lab," with observed estimate"))
 
- return(p)
+shade1 <- rbind(c(df[1, "x"], 0), subset(df ,x<=cutoff1 ),c(cutoff1,0) )
+shade2 <- rbind(c(cutoff2,0), subset(df ,x>=cutoff2 ), c(df[nrow(df), "x"], 0))
+
+p <- ggplot(data = df, aes(x = df$x, y = df$y)) + geom_line()
+p <- p + geom_segment(aes(x=est, y=0, xend = est, yend=ylim1),color="blue", linetype="dashed", size=.2)
+p <- p + geom_segment(aes(x=meanEst, y=0, xend = meanEst, yend=ylim2),color="black", size=.2)
+p <- p + geom_polygon(data = shade1, aes(x, y), fill = "grey")
+p <- p + geom_polygon(data = shade2, aes(x, y), fill = "grey")
+p <- p + theme_bw() + xlab("") + ylab("")
+p <- p + ggtitle(paste("Permutation distribution",lab," with observed estimate"))
+plotall[[type]] <- p
+
+cat(paste("building plottype: ", type, "\n"))
+
+print(plotall[[type]]) 
+
+}
+
 
 }
