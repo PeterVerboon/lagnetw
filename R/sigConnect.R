@@ -14,7 +14,8 @@
 #' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #'
 #' @return matrix (k x k) with observed differences of the paths ( k = number of variables in network), 
-#'         2 matrices (k x k) with the p-values (2 definitions) obtained from permutation distribution for the differences.
+#'         2 matrices (k x k) with the p-values (2 definitions) obtained from permutation
+#'         distribution for the differences. A for the number of tests adjusted alpha is given for the nominal 5%.
 #' @export
 #'
 #' @examples 
@@ -35,7 +36,7 @@ dat1 <- lagnetw::lagESM(data = dat1, subjnr = subjnr,  level1 = level, lagn = 1,
 
 dat1$group <- dat1[,group]
 
-k <- length(vars)  
+k <- length(vars)
 
 ### set outcomes to loop through
 outnames <- vars
@@ -107,8 +108,8 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
          p.perm.def1[i,j] <- 2*min(mean(permres[,j] >= difs[i,j], na.rm=TRUE), 
                                  mean(permres[,j] <= difs[i,j], na.rm=TRUE))
          p.perm.def2[i,j] <- min(1, 2*ifelse(difs[i,j] > 0, 
-                                           mean(permres[,j] >= difs[i,j], na.rm=TRUE), 
-                                           mean(permres[,j] <= difs[i,j], na.rm=TRUE)))
+                                            mean(permres[,j] >= difs[i,j], na.rm=TRUE), 
+                                            mean(permres[,j] <= difs[i,j], na.rm=TRUE)))
       }
       
    }
@@ -122,6 +123,7 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
   result$output$meanDifs <- meanDifs
   result$output$pvalues.def1 <- p.perm.def1
   result$output$pvalues.def2 <- p.perm.def2
+  result$output$plimit_adjusted <- noquote(paste0("Bonferroni corrected alpha level: ", round(0.05/(k**2),4)))
   
   return(result)
 }
