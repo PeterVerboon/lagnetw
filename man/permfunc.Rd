@@ -4,7 +4,8 @@
 \alias{permfunc}
 \title{Test the difference of the network connectivity between two groups}
 \usage{
-permfunc(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person)
+permfunc(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person,
+  optim = "bobyqa")
 }
 \arguments{
 \item{perms}{number of permutations}
@@ -20,11 +21,14 @@ permfunc(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person)
 \item{nobs.per.person}{vector with number of observations per person}
 
 \item{group.per.person}{vector with group number for each person}
+
+\item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
 }
 \value{
 matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,
         and differences between standard deviations, with their p-values (2 definitions).
 }
 \description{
-The function uses permutations to obtain p-values of the connectivity differences.
+The function uses permutations to obtain p-values of the connectivity differences, 
+used in conDif function.
 }

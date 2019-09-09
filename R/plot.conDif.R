@@ -9,10 +9,11 @@
 #'            4 = mean differences of SD's 
 #'
 #' @param x result of conDif 
+#' @param ... additional parameters
 #' @return Four figures are build with ggplot and returned to the plot window
 #' @export
 #'
-plot.conDif <- function(x,...) {
+plot.conDif <- function(x, ...) {
   
   plotall <- list()
 
@@ -37,8 +38,8 @@ shade2 <- rbind(c(cutoff2,0), subset(df ,x>=cutoff2 ), c(df[nrow(df), "x"], 0))
 p <- ggplot(data = df, aes(x = df$x, y = df$y)) + geom_line()
 p <- p + geom_segment(aes(x=est, y=0, xend = est, yend=ylim1),color="blue", linetype="dashed", size=.2)
 p <- p + geom_segment(aes(x=meanEst, y=0, xend = meanEst, yend=ylim2),color="black", size=.2)
-p <- p + geom_polygon(data = shade1, aes(x, y), fill = "grey")
-p <- p + geom_polygon(data = shade2, aes(x, y), fill = "grey")
+p <- p + geom_polygon(data = shade1, aes(shade1$x,shade1$y), fill = "grey")
+p <- p + geom_polygon(data = shade2, aes(shade2$x,shade2$y), fill = "grey")
 p <- p + theme_bw() + xlab("") + ylab("")
 p <- p + ggtitle(paste("Permutation distribution",lab," with observed estimate"))
 plotall[[type]] <- p

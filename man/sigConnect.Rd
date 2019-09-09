@@ -5,7 +5,7 @@
 \title{Test the difference of the network path strenghts between two groups}
 \usage{
 sigConnect(dat, vars, group, subjnr, level, randomVars = F,
-  perms = 500)
+  perms = 500, optim = "bobyqa")
 }
 \arguments{
 \item{dat}{data frame}
@@ -21,6 +21,8 @@ sigConnect(dat, vars, group, subjnr, level, randomVars = F,
 \item{randomVars}{boolean indicating whether the variables are random effects in the model}
 
 \item{perms}{number of permutations}
+
+\item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
 }
 \value{
 matrix (k x k) with observed differences of the paths ( k = number of variables in network), 

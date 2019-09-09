@@ -5,7 +5,7 @@
 \title{Test the difference of the network paths between two groups}
 \usage{
 permfunc2(iter, dat, pred, dv, group, subjnr, nobs.per.person,
-  group.per.person, is.conti = TRUE)
+  group.per.person, optim = "bobyqa", is.conti = TRUE)
 }
 \arguments{
 \item{iter}{number of permutations}
@@ -24,6 +24,8 @@ permfunc2(iter, dat, pred, dv, group, subjnr, nobs.per.person,
 
 \item{group.per.person}{vector with group number for each person}
 
+\item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
+
 \item{is.conti}{boolean to indicate if dependent variable is continuous or dichotomous (NOT ACTIVE)}
 }
 \value{
@@ -31,5 +33,6 @@ matrix (4 x 3) with total differences, diagonal differences, off-diagonal differ
         and differences between standard deviations, with their p-values (2 definitions).
 }
 \description{
-The function uses permutations to obtain p-values of the path differences.
+The function uses permutations to obtain p-values of the path differences,
+ used in sigConnect function.
 }

@@ -11,6 +11,7 @@
 #' @param level variable indicating level (e.g. days or beeps)
 #' @param randomVars boolean indicating whether the variables are random effects in the model
 #' @param perms number of permutations
+#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #'
 #' @return matrix (k x k) with observed differences of the paths ( k = number of variables in network), 
 #'         2 matrices (k x k) with the p-values (2 definitions) obtained from permutation distribution for the differences.
@@ -22,7 +23,7 @@
 #' sigConnect(dat = gratitude, vars = vars , group="wellBeing", subjnr ="subjnr", 
 #' level = "beepno", randomVars = FALSE, perms = 10)
 
-sigConnect <- function(dat, vars, group, subjnr, level, randomVars = F,  perms = 500) {
+sigConnect <- function(dat, vars, group, subjnr, level, randomVars = F,  perms = 500, optim = "bobyqa") {
   
   result <- list(input = as.list(environment()),
                  intermediate = list(),

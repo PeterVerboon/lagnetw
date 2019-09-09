@@ -53,7 +53,7 @@ If centerType is NULL no variables are centered.}
 \item{titlePlot}{title for the plot}
 }
 \value{
-a qgraph object (network) that can be plotted
+a qgraph object (network) that can be plotted and the centrality measures
 }
 \description{
 Based om lagged variables from an ESM study a network is constructed.

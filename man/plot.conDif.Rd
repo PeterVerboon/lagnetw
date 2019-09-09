@@ -2,21 +2,21 @@
 % Please edit documentation in R/plot.conDif.R
 \name{plot.conDif}
 \alias{plot.conDif}
-\title{Function to plot the results of the testCF function for network connectivity 
+\title{Function to plot the results of the conDif function for network connectivity 
 differences between two groups}
 \usage{
-\method{plot}{conDif}(x, type = 1)
+\method{plot}{conDif}(x)
 }
 \arguments{
 \item{x}{result of conDif}
-
-\item{type}{number that indicates what output to plot, 
-1 = mean differences total
-2 = mean differences auto-regression, 
-3 = mean differences, excluding auto regression,
-4 = mean differences of SD's}
+}
+\value{
+Four figures are build with ggplot and returned to the plot window
 }
 \description{
-Function to plot the results of the testCF function for network connectivity 
-differences between two groups
+There are four lot types. The type number indicates what figure is plotted, 
+           1 = mean differences total
+           2 = mean differences auto-regression, 
+           3 = mean differences, excluding auto regression,
+           4 = mean differences of SD's
 }

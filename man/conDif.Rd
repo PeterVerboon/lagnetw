@@ -5,7 +5,7 @@
 \title{Test the difference of the network connectivity between two groups}
 \usage{
 conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
-  perms = 500)
+  perms = 500, optim = "bobyqa")
 }
 \arguments{
 \item{dat}{data frame}
@@ -23,6 +23,8 @@ conDif(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F,
 \item{randomVars}{logical, indicating whether the variables should be included as random effects.}
 
 \item{perms}{number of permutations.}
+
+\item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
 }
 \value{
 Estimate of difference between groups wrt network connectivity with p value based on permutations.
