@@ -80,8 +80,10 @@ group.per.person <- sapply(split(dat1$group, dat1$subjnr), function(x) x[1])
       
       ### fit model with actual data
       if (is.conti) {
-         res1 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 1), na.action= stats::na.omit, control=list(opt="optim"))
-         res2 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 2), na.action= stats::na.omit, control=list(opt="optim"))
+         res1 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 1), na.action= stats::na.omit, 
+                           control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
+         res2 <- nlme::lme(ff, random = randomPred1, data = subset(dat1, group == 2), na.action= stats::na.omit, 
+                           control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
       } else {
          res1 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 1), family= stats::binomial)
          res2 <- lme4::glmer(ff, random = randomPred1, data = subset(dat1, group == 2), family= stats::binomial)

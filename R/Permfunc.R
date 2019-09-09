@@ -1,6 +1,7 @@
 #' Test the difference of the network connectivity between two groups
 #' 
-#' The function uses permutations to obtain p-values of the connectivity differences.
+#' The function uses permutations to obtain p-values of the connectivity differences, 
+#' used in conDif function.
 #'
 #' @param perms number of permutations
 #' @param dat data frame 
@@ -75,7 +76,8 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
 
 #' Test the difference of the network paths between two groups
 #' 
-#' The function uses permutations to obtain p-values of the path differences.
+#' The function uses permutations to obtain p-values of the path differences,
+#'  used in sigConnect function.
 #'
 #' @param iter number of permutations
 #' @param dat data frame 
@@ -85,15 +87,17 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
 #' @param subjnr identification number of the subjects
 #' @param nobs.per.person vector with number of observations per person             
 #' @param group.per.person vector with group number for each person 
+#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #' @param is.conti boolean to indicate if dependent variable is continuous or dichotomous (NOT ACTIVE)            
 #'
 #' @return matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,
 #'         and differences between standard deviations, with their p-values (2 definitions).
 #' @export
 #'
-permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group.per.person, is.conti = TRUE) {
+permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group.per.person,
+                      optim = "bobyqa", is.conti = TRUE) {
 
-  
+  is.conti <- TRUE
   ### reshuffle outcome variable within subjects
   ## dat$outcome <- unlist(sapply(split(dat[,dv], dat[,subjnr]), sample))
   
@@ -105,9 +109,9 @@ permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group
   ### fit model for both groups to data with reshuffled outcome
   if (is.conti) 
   {res.perm1 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 1), na.action = stats::na.omit, 
-                        control=list(opt="optim")), silent=TRUE)
+                              control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), silent=TRUE)
   res.perm2 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 2), na.action = stats::na.omit, 
-                       control=list(opt="optim")), silent=TRUE)
+                              control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), silent=TRUE)
   } else {
     res.perm1 <- try(lme4::glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 1), family = stats::binomial), silent=TRUE)
     res.perm2 <- try(lme4::glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 2), family = stats::binomial), silent=TRUE)
