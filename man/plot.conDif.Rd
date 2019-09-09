@@ -5,10 +5,12 @@
 \title{Function to plot the results of the conDif function for network connectivity 
 differences between two groups}
 \usage{
-\method{plot}{conDif}(x)
+\method{plot}{conDif}(x, ...)
 }
 \arguments{
 \item{x}{result of conDif}
+
+\item{...}{additional parameters}
 }
 \value{
 Four figures are build with ggplot and returned to the plot window
