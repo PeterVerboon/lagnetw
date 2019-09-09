@@ -13,7 +13,7 @@
 #' @param randomVars vector of variable names, used as random effects
 #' @param randomIcept logical indicating whther there is a random intercept (TRUE) or not (FALSE)
 #' @param fixedIcept logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)
-#' @param groups variable used to label groups in the network figure
+#' @param groups variable used to label groups of variables in the network figure
 #' @param lagn number of lags used in the network
 #' @param centerType vector of same length as vars that indicates for each variable which centering must be,
 #'               applied, either "person" or "grand_mean" or a number. If only "person" or "grand_mean" is specified (default), 
