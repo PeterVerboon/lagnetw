@@ -182,10 +182,12 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                        title=titlePlot)
  
    ## centrality measures
-  strength <- (apply(abs(coef1), 2, sum))[-1]
+  coef2 <- coef1[-1] - diag(as.matrix(coef1[-1]))
+  Ostrength <- (apply(abs(coef2), 2, sum))
+  Istrength <- (apply(abs(coef2), 1, sum))
   C <- qgraph::centrality(E, alpha = 1, posfun = abs, all.shortest.paths = FALSE)
-  C <- round(data.frame(cbind(strength,C$Betweenness, C$Closeness, C$OutDegree, C$InDegree)),3)
-  names(C) <- c("Strength", "Betweenness", "Closeness"," outDegree", " inDegree")
+  C <- round(data.frame(cbind(Ostrength,Istrength, C$Betweenness, C$Closeness, C$OutDegree, C$InDegree)),3)
+  names(C) <- c("OutStrength","InStrength", "Betweenness", "Closeness"," outDegree", " inDegree")
   row.names(C) <- vars
   
   ##  In "VV" the individual differences are taken from the fitted model1, each link now indicates 
