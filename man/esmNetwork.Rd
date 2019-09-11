@@ -31,7 +31,7 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 
 \item{fixedIcept}{logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)}
 
-\item{groups}{variable used to label groups in the network figure}
+\item{groups}{variable used to label groups of variables in the network figure}
 
 \item{lagn}{number of lags used in the network}
 

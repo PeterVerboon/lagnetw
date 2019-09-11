@@ -26,7 +26,8 @@ sigConnect(dat, vars, group, subjnr, level, randomVars = F,
 }
 \value{
 matrix (k x k) with observed differences of the paths ( k = number of variables in network), 
-        2 matrices (k x k) with the p-values (2 definitions) obtained from permutation distribution for the differences.
+        2 matrices (k x k) with the p-values (2 definitions) obtained from permutation
+        distribution for the differences. A for the number of tests adjusted alpha is given for the nominal 5%.
 }
 \description{
 Function that uses resampling method (permutations) to obtain distribion and p-values for
