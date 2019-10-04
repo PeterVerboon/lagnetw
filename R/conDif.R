@@ -73,7 +73,7 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
                        control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
     
     ### store coefficients
-    b1[i,] <- lme4::fixef(res1)[2:(k+1)]
+    b1[i,] <- lme4::fixef(res1)[2:(k+1)] 
     b2[i,] <- lme4::fixef(res2)[2:(k+1)]
     
   }
@@ -124,8 +124,6 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   
   outp <- round(cbind(b.diff.obs, "p-perm.def1"=p.perm.def1, "p-perm.def2"=p.perm.def2), 4)
   
-  res$output$resObserved1 <- res1
-  res$output$resObserved2 <- res2
   res$output$pvals <- outp
   res$output$permutations <- permres <- data.frame(permres)
   
