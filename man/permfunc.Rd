@@ -30,5 +30,5 @@ matrix (4 x 3) with total differences, diagonal differences, off-diagonal differ
 }
 \description{
 The function uses permutations to obtain p-values of the connectivity differences, 
-used in conDif function.
+used in permDif function.
 }
