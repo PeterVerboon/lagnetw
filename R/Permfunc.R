@@ -1,7 +1,7 @@
 #' Test the difference of the network connectivity between two groups
 #' 
 #' The function uses permutations to obtain p-values of the connectivity differences, 
-#' used in conDif function.
+#' used in permDif function.
 #'
 #' @param perms number of permutations
 #' @param dat data frame 
@@ -54,90 +54,40 @@ permfunc <- function(perms, dat, pb, outnames, pred, nobs.per.person, group.per.
          b1.perm[i,] <- lme4::fixef(res1.perm)[2:(k+1)]
          b2.perm[i,] <- lme4::fixef(res2.perm)[2:(k+1)]
          }
-  
+   
    }
 
    ### if we get this far, then all models converged and we can return the relevant statistics
-
+   b1.permD <- b1.perm
+   b2.permD <- b2.perm
+   diag(b1.permD) <- NA
+   diag(b2.permD) <- NA
    sav <- rep(NA_real_, 4)
    sav[1] <- c(mean(abs(b1.perm)) - mean(abs(b2.perm)))
    sav[2] <- c(mean(abs(diag(b1.perm))) - mean(abs(diag(b2.perm))))
-   diag(b1.perm) <- NA
-   diag(b2.perm) <- NA
-   sav[3] <- mean(abs(b1.perm), na.rm=TRUE) - mean(abs(b2.perm), na.rm=TRUE)
+   sav[3] <- mean(abs(b1.permD), na.rm=TRUE) - mean(abs(b2.permD), na.rm=TRUE)
    sav[4] <- stats::sd(b1.perm, na.rm =TRUE) - stats::sd(b2.perm, na.rm =TRUE)
-   names(sav) <- c("total diff", "diagonal diff", "offdiag diff", "SD diff")
-   return(sav)
+   names(sav) <- c("total ", "diagonal ", "off-diag ", "SD ")
+   
+   
+   difFE <- b1.perm - b2.perm
+   
+  
+   output <- list("FEsummary" = sav, "FEdifferences" = difFE, "perm1" = b1.perm, "perm2" = b2.perm)
+   
+  #   perm1 = k x k matrices with fixed effect in group 1 times permutations
+   #  perm2 = k x k matrices with fixed effect in group 2 times permutations
+   #  FEdifferences = k x k matrices with differences between fixed effect in group 1 and 2 times permutations
+   #  FEsummary = vector with 4 summary differences between fixed effect in group 1 and 2 times permutations
+   
+   return(output)
 
 } 
 
 
 
 
-#' Test the difference of the network paths between two groups
-#' 
-#' The function uses permutations to obtain p-values of the path differences,
-#'  used in sigConnect function.
-#'
-#' @param iter number of permutations
-#' @param dat data frame 
-#' @param pred vector with names of predictor variables
-#' @param dv name dependent variable
-#' @param group dichotomous variable that indicates the two groups to be compared
-#' @param subjnr identification number of the subjects
-#' @param nobs.per.person vector with number of observations per person             
-#' @param group.per.person vector with group number for each person 
-#' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
-#' @param is.conti boolean to indicate if dependent variable is continuous or dichotomous (NOT ACTIVE)            
-#'
-#' @return matrix (4 x 3) with total differences, diagonal differences, off-diagonal differences,
-#'         and differences between standard deviations, with their p-values (2 definitions).
-#' @export
-#'
-permfunc2 <- function(iter, dat, pred, dv, group, subjnr, nobs.per.person, group.per.person,
-                      optim = "bobyqa", is.conti = TRUE) {
 
-  is.conti <- TRUE
-  ### reshuffle outcome variable within subjects
-  ## dat$outcome <- unlist(sapply(split(dat[,dv], dat[,subjnr]), sample))
-  
-  ### reshuffle group variable
-  dat$group <- rep(sample(group.per.person), times=nobs.per.person)
-  
-  ff <- stats::as.formula(paste0(dv," ~ ", pred, sep=""))
-  
-  ### fit model for both groups to data with reshuffled outcome
-  if (is.conti) 
-  {res.perm1 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 1), na.action = stats::na.omit, 
-                              control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), silent=TRUE)
-  res.perm2 <- try(nlme::lme(ff, random = ~ 1 | subjnr, data=subset(dat, group == 2), na.action = stats::na.omit, 
-                              control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), silent=TRUE)
-  } else {
-    res.perm1 <- try(lme4::glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 1), family = stats::binomial), silent=TRUE)
-    res.perm2 <- try(lme4::glmer(outcome ~ pred, random = ~ 1 | subjnr, data=subset(dat, group = 2), family = stats::binomial), silent=TRUE)
-  }
-  
-  ### if model doesn't converge, return NA; otherwise return coefficients
-  if (is.conti) {
-  if (inherits(res.perm1, "try-error") | inherits(res.perm2, "try-error")) {
-    return(difFixEffects <- NA)
-     } else {
-       return(difFixEffects <- nlme::fixef(res.perm1) - nlme::fixef(res.perm2))
-       }
-  } else {
-  if (inherits(res.perm1, "try-error") | inherits(res.perm2, "try-error")) {
-    return(difFixEffects <- NA)
-     } else {
-       return(difFixEffects <- lme4::fixef(res.perm1) - lme4::fixef(res.perm2))
-       }
-  }
-  
-}  # end permfunc2
-
-
-
-# a <- permfunc2(iter=1,dat=dat1, pred = varsp, dv = outname,subjnr = subjnr,
-#               group = group,nobs.per.person = nobs.per.person, group.per.person=group.per.person)
 
 
 

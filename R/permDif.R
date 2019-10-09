@@ -11,19 +11,20 @@
 #' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #' @import ggplot2
 #' @return Estimate of difference between groups wrt network connectivity with p value based on permutations.
-#'            and permutation distribution
+#'          and permutation distribution. The p-values for differences of all individual paths and of summaries are given.
 #' @export
 #'
 #' @examples
 #' data("gratitude")
 #' vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
-#' out <- conDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
+#' out <- permDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
 #' level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 10) 
-conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, 
+permDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars = F, 
                    perms = 500, optim = "bobyqa") {
   
   res <- list(intermediate = list(),
               output = list());
+  resall <- list()
   
   dat$group <- dat[,group] 
    if (is.null(level2)) {
@@ -37,10 +38,16 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   k <- length(vars)  
   
   ### set up matrices to store coefficients in
+  b.diff.obs <- rep(NA_real_, 4)
+  names(b.diff.obs) <- c("total      ", "diagonal    ", "off-diag    ", "standard deviation")
   b1 <- matrix(NA, nrow=k, ncol=k)
   b2 <- matrix(NA, nrow=k, ncol=k)
   
-  ### create names for lagged vars and random terms
+  ### set up matrix to store the p values in (two definitions ) 
+  p1.perm <-  rep(NA, length(b.diff.obs))
+  p2.perm <-  matrix(NA, nrow = k, ncol = k)
+  
+  ### create names for lagged vars and random term
   varsp <- paste0(vars[1],"L",1)
   for (i in 2:length(vars)) {
     varsp <- paste0(varsp, " + ", vars[i],"L",1)
@@ -78,8 +85,10 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
     
   }
   
+  colnames(p2.perm) <- rownames(p2.perm) <- colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
   res$output$fixedEffects1 <- b1
   res$output$fixedEffects2 <- b2
+  res$output$observedDifs <- difs <- b1 - b2
   
   ### Permutation analyses
   
@@ -96,14 +105,13 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
                     pred=pred1, nobs.per.person=nobs.per.person, group.per.person=group.per.person)
   close(pb1)
   
-  ### turn results into a matrix
-  permres <- do.call(rbind, permres)
   
+  ### turn results into an array
+  permres <- do.call(Map, c(rbind, permres))
+  permres1 <- permres$FEsummary
+  permres2 <- array(permres$FEdifferences,dim = c(6,perms,6))
   
   ### table with permutation based p-values (two definitions of the p-values)
-  
-  b.diff.obs <- rep(NA_real_, 4)
-  names(b.diff.obs) <- c("total diff", "diagonal diff", "offdiag diff", "SD diff")
   
   b.diff.obs[1] <- mean(abs(b1)) - mean(abs(b2))
   b.diff.obs[2] <- mean(abs(diag(b1))) - mean(abs(diag(b2)))
@@ -114,24 +122,30 @@ conDif <- function(dat, vars, group, subjnr, level1, level2 = NULL, randomVars =
   b.diff.obs[3] <- mean(abs(b1), na.rm=TRUE) - mean(abs(b2), na.rm=TRUE)
   b.diff.obs[4] <- stats::sd(b1, na.rm =TRUE) - stats::sd(b2, na.rm =TRUE)
   
-  p.perm.def1 <- p.perm.def2 <- rep(NA, length(b.diff.obs))
   for (j in 1:length(b.diff.obs)) {
-    p.perm.def1[j] <- 2*min(mean(permres[,j] >= b.diff.obs[j], na.rm=TRUE), mean(permres[,j] <= b.diff.obs[j], na.rm=TRUE))
-    p.perm.def2[j] <- min(1, 2*ifelse(b.diff.obs[j] > 0, mean(permres[,j] >= b.diff.obs[j], na.rm=TRUE), mean(permres[,j] <= b.diff.obs[j], na.rm=TRUE)))
+    p1.perm[j] <- 2*min(mean(permres1[,j] >= b.diff.obs[j], na.rm=TRUE), 
+                            mean(permres1[,j] <= b.diff.obs[j], na.rm=TRUE))
   }
   
+  
+ #  
+ #  ### table with model-based and permutation based p-values 
+   for (i in 1:k) {
+     for (j in 1:k) {
+     p2.perm[i,j] <- 2*min(mean(permres2[i,,j] >= difs[i,j], na.rm=TRUE),
+                                mean(permres2[i,,j] <= difs[i,j], na.rm=TRUE))
+     }
+   }
+ # 
   ###  results
   
-  outp <- round(cbind(b.diff.obs, "p-perm.def1"=p.perm.def1, "p-perm.def2"=p.perm.def2), 4)
-  
-  res$output$pvals <- outp
-  res$output$permutations <- permres <- data.frame(permres)
-  
-  colnames(b1) <- rownames(b1) <- colnames(b2) <- rownames(b2) <- vars
-
+  res$output$permutations <- permres1
+  res$output$pvalues.summary <- round(cbind("difference" = b.diff.obs, "p_value" = p1.perm), 4)
+  res$output$pvalues.all <- round(p2.perm, 3)
+  res$output$plimit_adjusted <- noquote(paste0("Bonferroni corrected alpha level: ", round(0.05/(k**2),4)))
   
   
-  class(res) <- "conDif"
+  class(res) <- "permDif"
   return(res)
   
 } # end function
