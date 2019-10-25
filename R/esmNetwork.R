@@ -8,10 +8,10 @@
 #' @param level1 variable name, indicating level 1 variable, e.g. beeps
 #' @param level2 variable name, indicating level 2 variable, e.g. days
 #' @param vars vector with the names of the variables for which the network is computed
-#' @param covs covariates in the analyses, which are not plotted in the network
+#' @param covs covariates in the analyses, which are not plotted in the network. Covariates are not lagged and not centered.
 #' @param randomAll logical indicates whether all variables should be used as random effects
 #' @param randomVars vector of variable names, used as random effects
-#' @param randomIcept logical indicating whther there is a random intercept (TRUE) or not (FALSE)
+#' @param randomIcept logical indicating whether there is a random intercept (TRUE) or not (FALSE)
 #' @param fixedIcept logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)
 #' @param groups variable used to label groups of variables in the network figure
 #' @param lagn number of lags used in the network
@@ -63,7 +63,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
   
   nvars <- length(vars)                # number of variables involved in the network analyses
   npred <- length(covs) + nvars        # number of predictors involved in the analyses
-  allpred <- c(covs, vars)
+  allpred <- c(vars, covs)
   
   result$intermediate$numberOfVars <- nvars
   result$intermediate$numberOfPreds <- npred
@@ -113,7 +113,12 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
    if (!is.null(randomVars)) { 
      vrandom <- ifelse(randomIcept, 1, 0)
        for (i in (seq_along(randomVars))) {
-           vrandom <- paste0(vrandom, "+", randomVars[i],"L",lagn)
+          if (randomVars[i] %in% covs) {
+            vrandom <- paste0(vrandom, " + ", randomVars[i])
+          } else {
+            vrandom <- paste0(vrandom, " + ", randomVars[i],"L",lagn)
+          }
+          
        }
      }
 
@@ -124,10 +129,10 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
    
    if (randomAll) {
      vrandom <- varsp
-     pred1 <- paste0("(",covs2, varsp," + (", varsp, "|",subjnr,"))")
+     pred1 <- paste0("(",covs2, varsp," + (", varsp, " | ",subjnr,"))")
    } else {
      if (!exists("vrandom")) vrandom <- 1
-     pred1 <- paste0("(",covs2, varsp," + (", vrandom, "|",subjnr,"))") 
+     pred1 <- paste0("(",covs2, varsp," + (", vrandom, " | ",subjnr,"))") 
    }
    
    if (fixedIcept == FALSE) pred1 <- paste0("-1 + ", pred1) 
@@ -188,12 +193,14 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
  
    ## centrality measures
   coef2 <- coef1[-1] - diag(as.matrix(coef1[-1]))
-  Ostrength <- (apply(abs(coef2), 2, sum))
-  Istrength <- (apply(abs(coef2), 1, sum))
+  Ostrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 2, sum))
+  Istrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 1, sum))
   C <- qgraph::centrality(E, alpha = 1, posfun = abs, all.shortest.paths = FALSE)
   C <- round(data.frame(cbind(Ostrength,Istrength, C$Betweenness, C$Closeness, C$OutDegree, C$InDegree)),3)
   names(C) <- c("OutStrength","InStrength", "Betweenness", "Closeness"," outDegree", " inDegree")
   row.names(C) <- vars
+  
+  coef1 <- round(coef1, 4)
   
   ##  In "VV" the individual differences are taken from the fitted model1, each link now indicates 
   ##  the amount of variability across subjects
