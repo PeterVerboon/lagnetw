@@ -16,9 +16,10 @@ differences between two groups}
 Four figures are build with ggplot and returned to the plot window
 }
 \description{
-There are four lot types. The type number indicates what figure is plotted, 
+There are five lot types. The type number indicates what figure is plotted, 
            1 = mean differences total
            2 = mean differences auto-regression, 
            3 = mean differences, excluding auto regression,
-           4 = mean differences of SD's
+           4 = mean differences, subset of predictors
+           5 = mean differences of SD's
 }

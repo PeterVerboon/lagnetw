@@ -2,11 +2,12 @@
 #' Function to plot the results of the conDif function for network connectivity 
 #' differences between two groups
 #' 
-#' There are four lot types. The type number indicates what figure is plotted, 
+#' There are five lot types. The type number indicates what figure is plotted, 
 #'            1 = mean differences total
 #'            2 = mean differences auto-regression, 
 #'            3 = mean differences, excluding auto regression,
-#'            4 = mean differences of SD's 
+#'            4 = mean differences, subset of predictors
+#'            5 = mean differences of SD's 
 #'
 #' @param x result of permDif 
 #' @param ... additional parameters
@@ -17,7 +18,7 @@ plot.permDif <- function(x, ...) {
   
   plotall <- list()
 
-  for (type in c(1:4)) { 
+  for (type in c(1:5)) { 
     
   a <- x$output$permutations[,type]
   est <- x$output$pvalues.summary[type,1]
