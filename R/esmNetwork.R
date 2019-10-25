@@ -72,18 +72,32 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
 
   if (is.null(level2)) {dat$level2 <- 1; level2 <- "level2"}
   
-   # center data
+  ## Construct lagged variables
+  
+  dat1 <- lagESM(dat, 
+                 subjnr=subjnr,
+                 level2=level2,
+                 level1=level1, 
+                 lagn=lagn, 
+                 varnames=vars)
+  
+  result$intermediate$workData1 <- dat1
+
+    # center data
  
   if (!is.null(centerType)) {
-     dat1 <- centerESM(data = dat,
+     dat2 <- centerESM(data = dat1,
                        subjnr = subjnr,
                        addmeans = TRUE,
                        varnames = vars,
                        center = centerType)
   } else {
-    dat1 <- dat
+     dat2 <- dat1
   }
-  result$intermediate$workData1 <- dat1
+
+  
+  result$intermediate$workData2 <- dat2
+  
   
   if (is.null(labs)) { labs <- vars}
 
@@ -118,16 +132,7 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
    
    if (fixedIcept == FALSE) pred1 <- paste0("-1 + ", pred1) 
  
-  ## Construct lagged variables
-   
-  dat2 <- lagESM(dat1, 
-                 subjnr=subjnr,
-                 level2=level2,
-                 level1=level1, 
-                 lagn=lagn, 
-                 varnames=vars)
-  
-  result$intermediate$workData2 <- dat2
+
   
   ### run MLA for all variables in network
   
