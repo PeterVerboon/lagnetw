@@ -4,8 +4,8 @@
 \alias{permfunc}
 \title{Test the difference of the network connectivity between two groups}
 \usage{
-permfunc(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person,
-  optim = "bobyqa")
+permfunc(perms, dat, pb, outnames, pred, subset = NULL, nobs.per.person,
+  group.per.person, optim = "bobyqa")
 }
 \arguments{
 \item{perms}{number of permutations}
@@ -17,6 +17,8 @@ permfunc(perms, dat, pb, outnames, pred, nobs.per.person, group.per.person,
 \item{outnames}{vector with the names of the variables which are centered.}
 
 \item{pred}{formula with names of predictor variables for lmer.}
+
+\item{subset}{subset of predictor variables which are compared in summary statistics. If null then result is also null.}
 
 \item{nobs.per.person}{vector with number of observations per person}
 

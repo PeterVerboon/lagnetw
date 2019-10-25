@@ -4,23 +4,24 @@
 \alias{permDif}
 \title{Test the difference of the network connectivity between two groups}
 \usage{
-permDif(dat, vars, group, subjnr, level1, level2 = NULL,
-  randomVars = F, perms = 500, optim = "bobyqa")
+permDif(dat, vars, covs = NULL, group, subjnr, randomVars = NULL,
+  subset = NULL, perms = 500, optim = "bobyqa")
 }
 \arguments{
 \item{dat}{data frame}
 
-\item{vars}{vector with the names of the variables which are centered.}
+\item{vars}{vector with the names of the dependent variables.}
+
+\item{covs}{vector with the names of the covariates.}
 
 \item{group}{dichotomous variable that indicates the two groups to be compared}
 
 \item{subjnr}{identification number of the subjects}
 
-\item{level1}{variable, indicating level 1 variable, e.g. beeps. Must be specified.}
+\item{randomVars}{vector, indicating which variables should be included as random effects. 
+If "all" then all fixed effects are taken. If "null" only intercept is used as random effect.}
 
-\item{level2}{variable, indicating level 2 variable, e.g. days. Can be left empty.}
-
-\item{randomVars}{logical, indicating whether the variables should be included as random effects.}
+\item{subset}{subset of predictor variables which are compared in summary statistics. If null then result is also null.}
 
 \item{perms}{number of permutations.}
 
@@ -37,5 +38,5 @@ Test the difference of the network connectivity between two groups
 data("gratitude")
 vars <- c("pa_1","pa_2","pa_3","na_1","na_2","na_3")
 out <- permDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
-level1="beepno", level2 = "dayno", randomVars = FALSE, perms = 10) 
+randomVars = FALSE, perms = 10) 
 }
