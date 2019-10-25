@@ -21,13 +21,13 @@ esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
 
 \item{vars}{vector with the names of the variables for which the network is computed}
 
-\item{covs}{covariates in the analyses, which are not plotted in the network}
+\item{covs}{covariates in the analyses, which are not plotted in the network. Covariates are not lagged and not centered.}
 
 \item{randomAll}{logical indicates whether all variables should be used as random effects}
 
 \item{randomVars}{vector of variable names, used as random effects}
 
-\item{randomIcept}{logical indicating whther there is a random intercept (TRUE) or not (FALSE)}
+\item{randomIcept}{logical indicating whether there is a random intercept (TRUE) or not (FALSE)}
 
 \item{fixedIcept}{logical indicating whether there is a fixed intercept (TRUE) or not (FALSE)}
 
