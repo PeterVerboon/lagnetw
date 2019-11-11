@@ -80,13 +80,13 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   
   ## analyses of observed data
   for (i in 1:k) {
-    
+   
     ff <- stats::as.formula(paste0(vars[i], "~", pred1, sep=""))
     
     ### fit models
-    res1 <- lme4::lmer(ff, data=subset(dat, group == 1), REML=FALSE, 
+    res1 <- lme4::lmer(ff, data=subset(datx, group == 1), REML=FALSE, 
                        control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
-    res2 <- lme4::lmer(ff, data=subset(dat, group == 2), REML=FALSE, 
+    res2 <- lme4::lmer(ff, data=subset(datx, group == 2), REML=FALSE, 
                        control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE))
     
     ### store coefficients
