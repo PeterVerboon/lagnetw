@@ -24,6 +24,8 @@ plot.permDif <- function(x, ...) {
   est <- x$output$pvalues.summary[type,1]
   lab <- colnames(x$output$permutations)[type]
   
+  if (!is.na(est))  {
+  
 df <- with(stats::density(a), data.frame(x, y))
 meanEst <- mean(df$x)
 cutoff1 <- stats::quantile(a,0.025)
@@ -48,6 +50,11 @@ plotall[[type]] <- p
 cat(paste("building plottype: ", type, "\n"))
 
 print(plotall[[type]]) 
+
+  } else {
+    cat(paste("No plot available for", lab, "\n"))
+  }
+  
 
 }
 
