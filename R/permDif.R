@@ -113,6 +113,8 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
     s <- (vars %in% subset)*(1:k)
     b.diff.obs[4] <- mean(abs(b1[,s]), na.rm=TRUE) - mean(abs(b2[,s]), na.rm=TRUE)
     res$intermediate$subset1 <- b1[,s]
+    res$intermediate$subset2 <- b2[,s]
+    res$intermediate$dif.subset <- abs(b1[, s])- abs(b2[, s])
   }
   
   ## set diagonal elements to NA (then can take the mean with na.rm=TRUE and get the mean of the off-diagonal elements)
