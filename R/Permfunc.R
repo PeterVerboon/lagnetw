@@ -11,6 +11,7 @@
 #' @param subset  subset of predictor variables which are compared in summary statistics. If null then result is also null.                  
 #' @param nobs.per.person vector with number of observations per person             
 #' @param group.per.person vector with group number for each person
+#' @param type type of analyses: lagged ("lagged") or contemporaneous predictors ("contemp")
 #' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
              
 #'
@@ -18,7 +19,8 @@
 #'         and differences between standard deviations, with their p-values (2 definitions).
 #' @export
 #'
-permfunc <- function(perms, dat, pb, outnames, pred, subset = NULL, nobs.per.person, group.per.person, optim = "bobyqa") {
+permfunc <- function(perms, dat, pb, outnames, pred,pnames, subset = NULL, 
+                     nobs.per.person, group.per.person, type = "lagged", optim = "bobyqa") {
 
   utils::setTxtProgressBar(pb, perms)
 
@@ -32,18 +34,25 @@ permfunc <- function(perms, dat, pb, outnames, pred, subset = NULL, nobs.per.per
    ### reshuffle group variable
    dat$group <- rep(sample(group.per.person), times=nobs.per.person)
 
+   datx <- dat
    
    ### fit models to reshuffled data
 
    for (i in 1:k) {
 
       ff <- stats::as.formula(paste0(outnames[i], "~", pred, sep=""))
+      
+     if (type == "contemp") {
+        datx <- dat
+        datx[,pnames[i]] <- rnorm(dim(datx)[1], 0, .5)
+     }
+      
 
       ### fit models 
-      res1.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 1), REML=FALSE, 
+      res1.perm <- try(lme4::lmer(ff, data=subset(datx, datx$group == 1), REML=FALSE, 
                                   control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), 
                        silent = TRUE) 
-      res2.perm <- try(lme4::lmer(ff, data=subset(dat, dat$group == 2), REML=FALSE, 
+      res2.perm <- try(lme4::lmer(ff, data=subset(datx, datx$group == 2), REML=FALSE, 
                                   control = lme4::lmerControl(optimizer = optim, calc.derivs = FALSE)), 
                        silent = TRUE)
       

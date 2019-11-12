@@ -8,6 +8,7 @@
 #' @param randomVars vector, indicating which variables should be included as random effects. 
 #'                   If "all" then all fixed effects are taken. If "null" only intercept is used as random effect.
 #' @param subset  subset of predictor variables which are compared in summary statistics. If null then result is also null.                  
+#' @param type type of analyses: lagged ("lagged") or contemporaneous predictors ("contemp")
 #' @param perms number of permutations.             
 #' @param optim optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)           
 #' @import ggplot2
@@ -21,7 +22,7 @@
 #' out <- permDif(dat=gratitude,vars=vars, group="wellBeing", subjnr="subjnr",
 #' randomVars = FALSE, perms = 10) 
 permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, subset = NULL,
-                   perms = 500, optim = "bobyqa") {
+                   type = "lagged", perms = 50, optim = "bobyqa") {
   
   res <- list(input = as.list(environment()),
               intermediate = list(),
@@ -57,15 +58,16 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   }
   
   ## variables as random effect or intercept only
-  if (randomVars == "all") {
-    pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",(paste0(varsp, collapse = " + ")), "|",subjnr,")")
-  } 
   if (is.null(randomVars)) {
     pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",1, "|",subjnr,")")
   }
-  if (!is.null(randomVars) & !(randomVars == "all")) {
+  if (!is.null(randomVars)) {
+    if (!(randomVars == "all")) {
     if (sum(!(randomVars %in% names(dat))) > 0) {return("At least one random term is not present in the data")}
     pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",randomVars, "|",subjnr,")")
+  } else {
+    pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",(paste0(varsp, collapse = " + ")), "|",subjnr,")")
+  }
   }
  
   ### first choose optimizer
@@ -78,10 +80,17 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   
   res$intermediate$formula <- stats::as.formula(paste0(vars[1], "~", pred1, sep=""))
   
+  datx <- dat
+  
   ## analyses of observed data
   for (i in 1:k) {
    
     ff <- stats::as.formula(paste0(vars[i], "~", pred1, sep=""))
+    
+    if (type == "contemp") {
+      datx <- dat
+      datx[,pnames[i]] <- rnorm(dim(datx)[1], 0, .5)
+    }
     
     ### fit models
     res1 <- lme4::lmer(ff, data=subset(datx, group == 1), REML=FALSE, 
@@ -138,8 +147,9 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   ### repeatedly apply permfunc() function
   
   pb1 <- utils::txtProgressBar(min = 0, max = perms, style = 3)
-  permres <- lapply(1:perms, permfunc, dat=dat, pb = pb1, outnames=vars, 
-                    pred=pred1, subset = subset, nobs.per.person=nobs.per.person, group.per.person=group.per.person)
+  permres <- lapply(1:perms, permfunc, dat=dat, pb = pb1, outnames=vars, pnames = pnames,
+                    pred=pred1, subset = subset, type = type,
+                    nobs.per.person=nobs.per.person, group.per.person=group.per.person)
   close(pb1)
   
   
