@@ -1,5 +1,5 @@
 
-#' Function to plot the results of the conDif function for network connectivity 
+#' Function to plot the results of the permDif function for network connectivity 
 #' differences between two groups
 #' 
 #' There are five lot types. The type number indicates what figure is plotted, 
@@ -11,7 +11,7 @@
 #'
 #' @param x result of permDif 
 #' @param ... additional parameters
-#' @return Four figures are build with ggplot and returned to the plot window
+#' @return Four or five (when there subsets) figures are build and returned to the plot window
 #' @export
 #'
 plot.permDif <- function(x, ...) {
