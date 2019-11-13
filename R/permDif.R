@@ -190,6 +190,13 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   res$output$pvalues.all <- round(p2.perm, 3)[,1:k]
   res$output$plimit_adjusted <- noquote(paste0("Bonferroni corrected alpha level: ", round(0.05/(k**2),4)))
   
+  if (type == "contemp") {
+    diag(res$output$pvalues.all) <- NA
+    a <- res$output$pvalues.summary
+    a[2,] <- NA
+    res$output$pvalues.summary <- a
+  }
+  
   
   class(res) <- "permDif"
   return(res)
