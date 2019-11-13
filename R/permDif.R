@@ -1,5 +1,8 @@
 #' Test the difference of the network connectivity between two groups
 #'
+#' The predictors are the variables specified in "vars=", with "L1" added to the name.
+#' Note that these variables must exist in the data.
+#' 
 #' @param dat data frame
 #' @param vars vector with the names of the dependent variables. 
 #' @param covs vector with the names of the covariates. 
@@ -57,14 +60,19 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
     pnames <- c(pnames, covs)
   }
   
+  if (sum(!pnames %in% names(dat)) > 0) {
+    cat("Not all predictors are present in the data"); return()}
+  
+  
   ## variables as random effect or intercept only
   if (is.null(randomVars)) {
     pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",1, "|",subjnr,")")
   }
   if (!is.null(randomVars)) {
     if (!(randomVars == "all")) {
-    if (sum(!(randomVars %in% names(dat))) > 0) {return("At least one random term is not present in the data")}
-    pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",randomVars, "|",subjnr,")")
+      if (sum(!(randomVars %in% names(dat))) > 0) {
+        cat("At least one random term is not present in the data"); return()}
+        pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",randomVars, "|",subjnr,")")
   } else {
     pred1 <- paste0((paste0(varsp, collapse = " + "))," + (",(paste0(varsp, collapse = " + ")), "|",subjnr,")")
   }
