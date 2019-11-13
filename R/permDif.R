@@ -97,7 +97,7 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
     
     if (type == "contemp") {
       datx <- dat
-      datx[,pnames[i]] <- rnorm(dim(datx)[1], 0, .5)
+      datx[,pnames[i]] <- stats::rnorm(dim(datx)[1], 0, .5)
     }
     
     ### fit models

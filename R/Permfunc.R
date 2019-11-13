@@ -8,6 +8,7 @@
 #' @param pb name progressbar
 #' @param outnames vector with the names of the variables which are centered.
 #' @param pred formula with names of predictor variables for lmer.
+#' @param pnames vector with names of predictor variables.
 #' @param subset  subset of predictor variables which are compared in summary statistics. If null then result is also null.                  
 #' @param nobs.per.person vector with number of observations per person             
 #' @param group.per.person vector with group number for each person
@@ -19,7 +20,7 @@
 #'         and differences between standard deviations, with their p-values (2 definitions).
 #' @export
 #'
-permfunc <- function(perms, dat, pb, outnames, pred,pnames, subset = NULL, 
+permfunc <- function(perms, dat, pb, outnames, pred, pnames, subset = NULL, 
                      nobs.per.person, group.per.person, type = "lagged", optim = "bobyqa") {
 
   utils::setTxtProgressBar(pb, perms)
@@ -44,7 +45,7 @@ permfunc <- function(perms, dat, pb, outnames, pred,pnames, subset = NULL,
       
      if (type == "contemp") {
         datx <- dat
-        datx[,pnames[i]] <- rnorm(dim(datx)[1], 0, .5)
+        datx[,pnames[i]] <- stats::rnorm(dim(datx)[1], 0, .5)
      }
       
 

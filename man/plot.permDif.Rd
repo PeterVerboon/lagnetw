@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.permDif.R
 \name{plot.permDif}
 \alias{plot.permDif}
-\title{Function to plot the results of the conDif function for network connectivity 
+\title{Function to plot the results of the permDif function for network connectivity 
 differences between two groups}
 \usage{
 \method{plot}{permDif}(x, ...)
@@ -13,7 +13,7 @@ differences between two groups}
 \item{...}{additional parameters}
 }
 \value{
-Four figures are build with ggplot and returned to the plot window
+Four or five (when there subsets) figures are build and returned to the plot window
 }
 \description{
 There are five lot types. The type number indicates what figure is plotted, 

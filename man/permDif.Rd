@@ -5,7 +5,7 @@
 \title{Test the difference of the network connectivity between two groups}
 \usage{
 permDif(dat, vars, covs = NULL, group, subjnr, randomVars = NULL,
-  subset = NULL, perms = 500, optim = "bobyqa")
+  subset = NULL, type = "lagged", perms = 50, optim = "bobyqa")
 }
 \arguments{
 \item{dat}{data frame}
@@ -23,6 +23,8 @@ If "all" then all fixed effects are taken. If "null" only intercept is used as r
 
 \item{subset}{subset of predictor variables which are compared in summary statistics. If null then result is also null.}
 
+\item{type}{type of analyses: lagged ("lagged") or contemporaneous predictors ("contemp")}
+
 \item{perms}{number of permutations.}
 
 \item{optim}{optimizer used in lmer, options: "bobyqa" or "Nelder_Mead", see lmerControl (lme4)}
@@ -32,7 +34,8 @@ Estimate of difference between groups wrt network connectivity with p value base
          and permutation distribution. The p-values for differences of all individual paths and of summaries are given.
 }
 \description{
-Test the difference of the network connectivity between two groups
+The predictors are the variables specified in "vars=", with "L1" added to the name.
+Note that these variables must exist in the data.
 }
 \examples{
 data("gratitude")
