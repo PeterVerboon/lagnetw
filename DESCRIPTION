@@ -1,6 +1,6 @@
 Package: lagnetw
 Title: The package builds a network for ESM data
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: person("Peter", "Verboon", email = "Peter.Verboon@ou.nl", role = c("aut", "cre"))
 Description: The package builds a network based on lagged variables. The variables are from ESM data.
 Depends: R (>= 3.5.0)
