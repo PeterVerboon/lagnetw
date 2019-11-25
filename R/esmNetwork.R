@@ -192,12 +192,12 @@ esmNetwork <- function(dat, subjnr, level1, level2 = NULL,  vars, covs = NULL,
                        title=titlePlot)
  
    ## centrality measures
-  coef2 <- coef1[-1] - diag(as.matrix(coef1[-1]))
-  Ostrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 2, sum))
-  Istrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 1, sum))
+  #coef2 <- coef1[-1] - diag(as.matrix(coef1[-1]))
+  #Ostrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 2, sum))
+  #Istrength <- (apply(abs(coef2[,(npred-nvars+1):npred]), 1, sum))
   C <- qgraph::centrality(E, alpha = 1, posfun = abs, all.shortest.paths = FALSE)
-  C <- round(data.frame(cbind(Ostrength,Istrength, C$Betweenness, C$Closeness, C$OutDegree, C$InDegree)),3)
-  names(C) <- c("OutStrength","InStrength", "Betweenness", "Closeness"," outDegree", " inDegree")
+  C <- round(data.frame(cbind(C$Betweenness, C$Closeness, C$OutDegree, C$InDegree)),3)
+  names(C) <- c( "Betweenness", "Closeness"," outDegree", " inDegree")
   row.names(C) <- vars
   
   coef1 <- round(coef1, 4)
