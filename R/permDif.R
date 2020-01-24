@@ -17,6 +17,7 @@
 #' @import ggplot2
 #' @return Estimate of difference between groups wrt network connectivity with p value based on permutations.
 #'          and permutation distribution. The p-values for differences of all individual paths and of summaries are given.
+#'          Also p-values for the differences of the centrality measures inDegree and outDegree are given.
 #' @export
 #'
 #' @examples
@@ -40,7 +41,7 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   
   ### set up matrices to store coefficients in
   b.diff.obs <- rep(NA_real_, 5)
-  names(b.diff.obs) <- c("total      ", "diagonal    ", "off-diag    ", "subset  ", "standard deviation")
+  names(b.diff.obs) <- c("total      ", "diagonal    ", "off-diag    ", "subset  ",  "standard deviation")
   b1 <- matrix(NA, nrow=k, ncol=p)
   b2 <- matrix(NA, nrow=k, ncol=p)
   
@@ -142,7 +143,14 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
   ## and finally the differences in standard deviations
   b.diff.obs[5] <- stats::sd(b1, na.rm =TRUE) - stats::sd(b2, na.rm =TRUE)
   
+  inDegreeGroup1 <- rowSums(abs(b1),na.rm = TRUE)
+  inDegreeGroup2 <- rowSums(abs(b2),na.rm = TRUE)
+  inDegreeDif <-  inDegreeGroup2 - inDegreeGroup1
+  outDegreeGroup1 <- colSums(abs(b1),na.rm = TRUE)
+  outDegreeGroup2 <- colSums(abs(b2),na.rm = TRUE)
+  outDegreeDif <-   outDegreeGroup2 -outDegreeGroup1
   
+
   
   ### Permutation analyses
   
@@ -160,6 +168,7 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
                     nobs.per.person=nobs.per.person, group.per.person=group.per.person)
   close(pb1)
   
+
   
   ### turn results into an array
   permres <- do.call(Map, c(rbind, permres))
@@ -182,11 +191,33 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
                                 mean(permres2[i,,j] <= difs[i,j], na.rm=TRUE))
      }
    }
- # 
+  
+  #  ### table with permutation based p-values for inDegree and outDegree
+  pValinDegree <- pValoutDegree <- rep(0, k)
+  for (j in 1:k) {
+      pValinDegree[j] <- 2*min(mean(permres$inDegreeDif[,j] >= inDegreeDif[j], na.rm=TRUE),
+                            mean(permres$inDegreeDif[,j] <= inDegreeDif[j], na.rm=TRUE))
+      pValoutDegree[j] <- 2*min(mean(permres$outDegreeDif[,j] >= outDegreeDif[j], na.rm=TRUE),
+                               mean(permres$outDegreeDif[,j] <= outDegreeDif[j], na.rm=TRUE))
+  }
+ 
+  
+  
+  
   ###  results
   
+  names(pValinDegree) <- names(pValoutDegree) <- vars
+  
+  res$intermediate$inDegreeGroup1 <- permres$inDegreeGroup1
+  res$intermediate$inDegreeGroup2 <- permres$inDegreeGroup2
+  res$intermediate$inDegreeDif <- permres$inDegreeDif
+  res$intermediate$outDegreeGroup1 <- permres$outDegreeGroup1
+  res$intermediate$outDegreeGroup2 <- permres$outDegreeGroup2
+  res$intermediate$outDegreeDif <- permres$outDegreeDif
   res$output$permutations <- permres1
   res$output$pvalues.summary <- round(cbind("difference" = b.diff.obs, "p_value" = p1.perm), 4)
+  res$output$pvalues.inDegree <- round(pValinDegree, 4)
+  res$output$pvalues.outDegree <- round(pValoutDegree, 4)
   res$output$pvalues.all <- round(p2.perm, 3)[,1:k]
   res$output$plimit_adjusted <- noquote(paste0("Bonferroni corrected alpha level: ", round(0.05/(k**2),4)))
   

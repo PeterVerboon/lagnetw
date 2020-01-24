@@ -71,8 +71,8 @@ permfunc <- function(perms, dat, pb, outnames, pred, pnames, subset = NULL,
    ### if we get this far, then all models converged and we can return the relevant statistics
    b1.permD <- b1.perm
    b2.permD <- b2.perm
-   diag(b1.permD) <- NA
-   diag(b2.permD) <- NA
+   diag(b1.permD) <- 0
+   diag(b2.permD) <- 0
    sav <- rep(NA_real_, 5)
    sav[1] <- c(mean(abs(b1.perm)) - mean(abs(b2.perm)))
    sav[2] <- c(mean(abs(diag(b1.perm))) - mean(abs(diag(b2.perm))))
@@ -82,18 +82,31 @@ permfunc <- function(perms, dat, pb, outnames, pred, pnames, subset = NULL,
       sav[4] <- mean(abs(b1.perm[,s]), na.rm=TRUE) - mean(abs(b2.perm[,s]), na.rm=TRUE)
    } 
    sav[5] <- stats::sd(b1.perm, na.rm =TRUE) - stats::sd(b2.perm, na.rm =TRUE)
+   
    names(sav) <- c("total ", "diagonal ", "off-diag ", "subset  ", "SD ")
    
+   inDegreeGroup1 <- rowSums(abs(b1.permD),na.rm = TRUE)
+   inDegreeGroup2 <- rowSums(abs(b2.permD),na.rm = TRUE)
+   inDegreeDif <- inDegreeGroup2 - inDegreeGroup1
+   outDegreeGroup1 <- colSums(abs(b1.permD),na.rm = TRUE)
+   outDegreeGroup2 <- colSums(abs(b2.permD),na.rm = TRUE)
+   outDegreeDif <- outDegreeGroup2 -outDegreeGroup1
    
    difFE <- b1.perm - b2.perm
    
   
-   output <- list("FEsummary" = sav, "FEdifferences" = difFE, "perm1" = b1.perm, "perm2" = b2.perm)
+   output <- list("FEsummary" = sav, "FEdifferences" = difFE, 
+                  "perm1" = b1.perm, "perm2" = b2.perm,
+                  "inDegreeGroup1" = inDegreeGroup1, "inDegreeGroup2" = inDegreeGroup2,
+                  "outDegreeGroup1" =outDegreeGroup1, "outDegreeGroup2" = outDegreeGroup2,
+                  "inDegreeDif" =outDegreeDif, "outDegreeDif" = outDegreeDif)
    
   #   perm1 = k x k matrices with fixed effect in group 1 times permutations
    #  perm2 = k x k matrices with fixed effect in group 2 times permutations
    #  FEdifferences = k x k matrices with differences between fixed effect in group 1 and 2 times permutations
    #  FEsummary = vector with 4 summary differences between fixed effect in group 1 and 2 times permutations
+   #  inDegree = vector with inDegree values for both groups and differences times permutations
+   #  outDegree = vector with outDegree values for both groups and differences times permutations
    
    return(output)
 
