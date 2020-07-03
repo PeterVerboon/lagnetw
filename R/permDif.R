@@ -33,7 +33,10 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
               output = list());
   resall <- list()
   
-  dat$group <- dat[,group] 
+  dat$group <- dat[,group]
+  s <- dat[,group] == min(dat[,group])
+  dat$group[s]  <- 1
+  dat$group[!s]  <- 2
 
     k <- length(vars)  
     if (is.null(covs)) p <- k
