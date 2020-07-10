@@ -4,7 +4,8 @@
 \name{gratitude}
 \alias{gratitude}
 \title{A test dataset: gratitude}
-\format{A data frame with 7194 rows and 11 variables:
+\format{
+A data frame with 7194 rows and 11 variables:
 \describe{
   \item{subjnr}{subjnr}
   \item{beepno}{beepnr}
@@ -17,7 +18,8 @@
   \item{na_1}{negative affect insecure}
   \item{na_2}{positive affect fearful}
   \item{na_3}{negative affect sad}
-  }}
+  }
+}
 \usage{
 gratitude
 }

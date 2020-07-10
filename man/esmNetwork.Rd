@@ -4,11 +4,27 @@
 \alias{esmNetwork}
 \title{Compute network of ESM variables using lags}
 \usage{
-esmNetwork(dat, subjnr, level1, level2 = NULL, vars, covs = NULL,
-  randomAll = FALSE, randomVars = NULL, randomIcept = TRUE,
-  fixedIcept = TRUE, groups = NULL, lagn = 1,
-  centerType = "person", optim = "bobyqa", layout = "spring",
-  labs = NULL, solid = 0.1, plimit = 0.05, titlePlot = "Figure")
+esmNetwork(
+  dat,
+  subjnr,
+  level1,
+  level2 = NULL,
+  vars,
+  covs = NULL,
+  randomAll = FALSE,
+  randomVars = NULL,
+  randomIcept = TRUE,
+  fixedIcept = TRUE,
+  groups = NULL,
+  lagn = 1,
+  centerType = "person",
+  optim = "bobyqa",
+  layout = "spring",
+  labs = NULL,
+  solid = 0.1,
+  plimit = 0.05,
+  titlePlot = "Figure"
+)
 }
 \arguments{
 \item{dat}{data frame}

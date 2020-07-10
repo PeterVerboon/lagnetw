@@ -4,8 +4,19 @@
 \alias{permfunc}
 \title{Test the difference of the network connectivity between two groups}
 \usage{
-permfunc(perms, dat, pb, outnames, pred, pnames, subset = NULL,
-  nobs.per.person, group.per.person, type = "lagged", optim = "bobyqa")
+permfunc(
+  perms,
+  dat,
+  pb,
+  outnames,
+  pred,
+  pnames,
+  subset = NULL,
+  nobs.per.person,
+  group.per.person,
+  type = "lagged",
+  optim = "bobyqa"
+)
 }
 \arguments{
 \item{perms}{number of permutations}

@@ -4,8 +4,14 @@
 \alias{lagESM}
 \title{Function to compute lagged n variables in ESM data and add it to data}
 \usage{
-lagESM(data, subjnr = "subjnr", level2 = NULL, level1 = "beepnr",
-  lagn = 1, varnames = NULL)
+lagESM(
+  data,
+  subjnr = "subjnr",
+  level2 = NULL,
+  level1 = "beepnr",
+  lagn = 1,
+  varnames = NULL
+)
 }
 \arguments{
 \item{data}{data frame}

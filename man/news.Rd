@@ -4,7 +4,8 @@
 \name{news}
 \alias{news}
 \title{A test dataset: news}
-\format{A data frame with 654 rows and 13 variables:
+\format{
+A data frame with 654 rows and 13 variables:
 \describe{
   \item{subjnr}{subjnr}
   \item{daynr}{daynr}
@@ -19,7 +20,8 @@
   \item{Down}{feel down }
   \item{Relaxed}{feel relaxed }
   \item{Insecure}{feel insecure }
-  }}
+  }
+}
 \usage{
 news
 }

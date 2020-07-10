@@ -4,8 +4,18 @@
 \alias{permDif}
 \title{Test the difference of the network connectivity between two groups}
 \usage{
-permDif(dat, vars, covs = NULL, group, subjnr, randomVars = NULL,
-  subset = NULL, type = "lagged", perms = 50, optim = "bobyqa")
+permDif(
+  dat,
+  vars,
+  covs = NULL,
+  group,
+  subjnr,
+  randomVars = NULL,
+  subset = NULL,
+  type = "lagged",
+  perms = 50,
+  optim = "bobyqa"
+)
 }
 \arguments{
 \item{dat}{data frame}
@@ -32,6 +42,7 @@ If "all" then all fixed effects are taken. If "null" only intercept is used as r
 \value{
 Estimate of difference between groups wrt network connectivity with p value based on permutations.
          and permutation distribution. The p-values for differences of all individual paths and of summaries are given.
+         Also p-values for the differences of the centrality measures inDegree and outDegree are given.
 }
 \description{
 The predictors are the variables specified in "vars=", with "L1" added to the name.

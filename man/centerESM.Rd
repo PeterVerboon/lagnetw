@@ -4,8 +4,7 @@
 \alias{centerESM}
 \title{Center variables in ESM data}
 \usage{
-centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL,
-  center = NULL)
+centerESM(data, subjnr = NULL, addmeans = TRUE, varnames = NULL, center = NULL)
 }
 \arguments{
 \item{data}{data frame}

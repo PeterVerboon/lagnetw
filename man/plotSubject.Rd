@@ -4,8 +4,7 @@
 \alias{plotSubject}
 \title{Network plot of an individual}
 \usage{
-plotSubject(res, subjectID, layout = "circular", solid = 0.1,
-  plimit = 0.05)
+plotSubject(res, subjectID, layout = "circular", solid = 0.1, plimit = 0.05)
 }
 \arguments{
 \item{res}{result of class "esmNetwork"}

@@ -49,9 +49,9 @@ permDifCor <- function(dat, vars,  group, perms = 1000) {
   dat1 <- subset(dat, dat$group == 1)
   dat2 <- subset(dat, dat$group == 2)
   ## analyses of observed data
-  res1 <- qgraph::qgraph(cor(dat1[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
+  res1 <- qgraph::qgraph(stats::cor(dat1[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
   b1 <- res1$Edgelist$weight
-  res2 <- qgraph::qgraph(cor(dat2[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
+  res2 <- qgraph::qgraph(stats::cor(dat2[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
   b2 <- res2$Edgelist$weight
   
   difObs <- b1 - b2
@@ -87,9 +87,9 @@ permDifCor <- function(dat, vars,  group, perms = 1000) {
      datx1 <- subset(datx, datx$group == 1)
      datx2 <- subset(datx, datx$group == 2)
      
-     resx1 <- qgraph::qgraph(cor(datx1[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
+     resx1 <- qgraph::qgraph(stats::cor(datx1[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
      perm1[i,] <- resx1$Edgelist$weight
-     resx2 <- qgraph::qgraph(cor(datx2[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
+     resx2 <- qgraph::qgraph(stats::cor(datx2[,vars], use = "complete.obs"), graph = "cor", DoNotPlot = TRUE)
      perm2[i,] <- resx2$Edgelist$weight
      difPerm[i,] <- resx1$Edgelist$weight - resx2$Edgelist$weight
      meanDifPerm[i] <- mean(abs(resx1$Edgelist$weight - resx2$Edgelist$weight))
