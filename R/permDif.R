@@ -99,6 +99,7 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
    
     ff <- stats::as.formula(paste0(vars[i], "~", pred1, sep=""))
     
+    ## In contemporary network create random variable for predictor that equals dependent
     if (type == "contemp") {
       datx <- dat
       datx[,pnames[i]] <- stats::rnorm(dim(datx)[1], 0, .5)
@@ -138,7 +139,7 @@ permDif <- function(dat, vars, covs = NULL, group, subjnr, randomVars = NULL, su
     res$intermediate$dif.subset <- abs(b1[, s])- abs(b2[, s])
   }
   
-  ## set diagonal elements to NA (then can take the mean with na.rm=TRUE and get the mean of the off-diagonal elements)
+  ## set diagonal elements to NA (then take the mean with na.rm=TRUE and get the mean of the off-diagonal elements)
   diag(b1) <- NA
   diag(b2) <- NA
   b.diff.obs[3] <- mean(abs(b1), na.rm=TRUE) - mean(abs(b2), na.rm=TRUE)
