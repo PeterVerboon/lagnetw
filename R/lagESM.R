@@ -46,16 +46,18 @@ if (is.null(level2)) {
 rest <- names(data)[!names(data) %in% c(subjnr,level2, level1, varnames)]
 dat <- data[,c(subjnr,level2, level1, varnames, rest)]
 
-vdaynr <- rep(sort(unique(dat[,level2])), length(unique(dat[,subjnr])));  
-vsubjnr <- rep(unique(dat[,subjnr]), each=length(unique(dat[,level2])) )
+l2 <- unique(dat[,level2])[!is.na(unique(dat[,level2]))]
+vdaynr <- rep(sort(l2), length(unique(dat[,subjnr])));  
+vsubjnr <- rep(unique(dat[,subjnr]), each=length(l2))
 
 a <- data.frame(cbind(vsubjnr,vdaynr))
 
 a2 <- NULL; a3 <- NULL
+l1 <- unique(dat[,level1])[!is.na(unique(dat[,level1]))]
 
-                a1 <- a;   a1[,level1] <- max(unique(dat[,level1])) + 1 
-if (lagn > 1)  {a2 <- a;   a2[,level1] <- max(unique(dat[,level1])) + 2 }
-if (lagn == 3) {a3 <- a;   a3[,level1] <- max(unique(dat[,level1])) + 3 }
+                a1 <- a;   a1[,level1] <- max(l1) + 1 
+if (lagn > 1)  {a2 <- a;   a2[,level1] <- max(l1) + 2 }
+if (lagn == 3) {a3 <- a;   a3[,level1] <- max(l1) + 3 }
                 
                
 a <- rbind(a1,a2,a3)  ;                            
@@ -77,7 +79,7 @@ for (i in seq_along(varnames)) {
 
 ## remove additional beeps
 
-b <- b[b[,level1] <= (max(unique(dat[,level1]))),]
+b <- b[b[,level1] <= max(l1),]
 
 return(b)
 
